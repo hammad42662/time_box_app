@@ -14,8 +14,8 @@ export default function Home() {
             Welcome To Time Box App
           </h1>
         </nav>
-        <main className=" w-full flex lg:flex-row flex-col gap-64 ml-3 mr-3 mt-10">
-          <aside className="w-full h-full flex flex-col flex-wrap bg-slate-400 gap-10">
+        <main className=" w-full flex lg:flex-col flex-col gap-64 ml-3 mr-3 mt-10">
+          <aside className="w-full h-full flex flex-row  bg-slate-400 gap-10">
             {/* left top --- top prorities */}
             <BrainDump />
             {/* left bottom -- Brain Dum  */}
@@ -23,7 +23,7 @@ export default function Home() {
           </aside>
           {/* right full tasks  */}
 
-          <section className=" w-full h-full bg-red-400 flex-auto">
+          <section className=" w-full h-full bg-white mt-0">
             <CurrentTasks />
           </section>
         </main>

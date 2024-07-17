@@ -3,9 +3,17 @@ import TimePicker from "react-time-picker";
 import "react-time-picker/dist/TimePicker.css";
 import "react-clock/dist/Clock.css";
 import { useTaskContext } from "../TaskContext";
+
 export default function BrainDump() {
-  const { tasks, time, setTime, handleAddTask, taskInput, handleInputChange } =
-    useTaskContext();
+  const {
+    tasks,
+    time,
+    handleTaskDelete,
+    setTime,
+    handleAddTask,
+    taskInput,
+    handleInputChange,
+  } = useTaskContext();
 
   return (
     <div className="w-auto h-full bg-red-200">
@@ -25,9 +33,15 @@ export default function BrainDump() {
       </div>
       <hr />
       <div className="bg-red">
-        {tasks.map((task, index) => (
+        {tasks.map((taskObj, index) => (
           <div key={index} className="flex flex-row gap-1">
-            {index + 1}: <p>{task}</p> <p>{time}</p>
+            {index + 1}: <p>{taskObj.task}</p> <p>{taskObj.time}</p>
+            <button
+              className="bg-red"
+              onClick={() => handleTaskDelete(taskObj.task)}
+            >
+              -Delete Task
+            </button>
           </div>
         ))}
       </div>

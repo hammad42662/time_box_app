@@ -2,11 +2,12 @@ import React, { createContext, useContext, useState } from "react";
 
 // Define the context type
 type TaskContextType = {
-  tasks: string[];
+  tasks: { task: string; time: string | null }[];
   time: string | null;
-  setTime: any;
+  setTime: (time: string | null) => void;
   taskInput: string;
   handleInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  handleTaskDelete: (taskToDelete: string) => void;
   handleAddTask: (e: React.MouseEvent<HTMLButtonElement>) => void;
 };
 
@@ -19,9 +20,10 @@ export default function TaskProvider({
 }: {
   children: React.ReactNode;
 }) {
-  const initialTasks: string[] = [];
-  const [tasks, setTasks] = useState<string[]>(initialTasks);
-  const [time, setTime] = useState<string | null>("10:00");
+  const initialTasks: { task: string; time: string | null }[] = [];
+  const [tasks, setTasks] =
+    useState<{ task: string; time: string | null }[]>(initialTasks);
+  const [time, setTime] = useState<string | null>(null);
   const [taskInput, setTaskInput] = useState<string>("");
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -31,19 +33,26 @@ export default function TaskProvider({
   const handleAddTask = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     if (taskInput.trim() !== "") {
-      setTasks([...tasks, taskInput]);
+      setTasks([...tasks, { task: taskInput, time }]);
       setTaskInput("");
+      setTime(null);
     }
+  };
+
+  const handleTaskDelete = (taskToDelete: string) => {
+    const updatedTasks = tasks.filter((t) => t.task !== taskToDelete);
+    setTasks(updatedTasks);
   };
 
   // Provide context value to children
   const contextValue: TaskContextType = {
-    setTime,
     tasks,
     time,
+    setTime,
     taskInput,
     handleInputChange,
     handleAddTask,
+    handleTaskDelete,
   };
 
   return (
