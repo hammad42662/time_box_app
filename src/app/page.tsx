@@ -1,13 +1,14 @@
 "use client";
+import { Provider } from "react-redux";
 import BrainDump from "./components/braindump";
 import CurrentTasks from "./components/currenttasks";
 import PriorityTasks from "./components/prioritytasks";
-import TaskProvider from "./TaskContext";
+import store from "./redux/store";
 
 export default function Home() {
   return (
     <>
-      <TaskProvider>
+      <Provider store={store}>
         <nav className=" w-full h-full bg-blue-900  ">
           <h1 className=" text-center text-3xl text-white">
             {" "}
@@ -27,7 +28,7 @@ export default function Home() {
             <CurrentTasks />
           </section>
         </main>
-      </TaskProvider>
+      </Provider>
     </>
   );
 }
