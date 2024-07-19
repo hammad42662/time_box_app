@@ -18,9 +18,9 @@ export default function CurrentTasks() {
   };
 
   const events = tasks
-    .filter((task) => task.time && isValidDate(task.time)) // Filter out tasks with invalid or null time
+    .filter((task) => task.time && isValidDate(task.time))
     .map((task, index) => {
-      const eventTime = new Date(task.time!).toISOString();
+      const eventTime = new Date(task.time!).toISOString(); // Ensure this format is correct for FullCalendar
       console.log(`Task ${index}:`, task.title, eventTime);
       return {
         title: task.title,
@@ -28,6 +28,10 @@ export default function CurrentTasks() {
         id: index.toString(),
       };
     });
+
+  useEffect(() => {
+    console.log("Calendar events:", events); // Debugging log
+  }, [events]);
 
   return (
     <div className="calendar-container">

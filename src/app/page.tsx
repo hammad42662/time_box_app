@@ -4,7 +4,12 @@ import BrainDump from "./components/braindump";
 import CurrentTasks from "./components/currenttasks";
 import PriorityTasks from "./components/prioritytasks";
 import store from "./redux/store";
-
+import { Montserrat } from "next/font/google";
+import Guide from "./components/guide";
+const montserrat = Montserrat({
+  weight: ["400", "700", "900"],
+  subsets: ["latin"],
+});
 export default function Home() {
   return (
     <>
@@ -15,19 +20,20 @@ export default function Home() {
             Welcome To Time Box App
           </h1>
         </nav>
-        <main className=" w-full flex lg:flex-col flex-col gap-64 ml-3 mr-3 mt-10">
-          <aside className="w-full h-full flex flex-row  bg-slate-400 gap-10">
+        <Guide />
+        <main
+          className={` ${montserrat.className} w-full flex lg:flex-col flex-col gap-64 ml-3 mr-3 mt-10`}
+        >
+          <aside className="w-full h-full flex flex-row   gap-10">
             {/* left top --- top prorities */}
             <BrainDump />
             {/* left bottom -- Brain Dum  */}
             <PriorityTasks />
           </aside>
-          {/* right full tasks  */}
-
-          <section className=" w-full h-full bg-white mt-0">
-            <CurrentTasks />
-          </section>
         </main>
+        <section className=" w-full h-full bg-white mt-20">
+          <CurrentTasks />
+        </section>
       </Provider>
     </>
   );
