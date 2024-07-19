@@ -14,17 +14,17 @@ export default function Home() {
   return (
     <>
       <Provider store={store}>
-        <nav className=" w-full h-full bg-blue-900  ">
+        {/* <nav className=" w-full h-full bg-blue-900  ">
           <h1 className=" text-center text-3xl text-white">
             {" "}
             Welcome To Time Box App
           </h1>
-        </nav>
-        <Guide />
+        </nav> */}
+        {/* <Guide /> */}
         <main
           className={` ${montserrat.className} w-full flex lg:flex-col flex-col gap-64 ml-3 mr-3 mt-10`}
         >
-          <aside className="w-full h-full flex flex-row   gap-10">
+          <aside className="w-full h-full flex flex-col lg:flex-row   gap-10">
             {/* left top --- top prorities */}
             <BrainDump />
             {/* left bottom -- Brain Dum  */}

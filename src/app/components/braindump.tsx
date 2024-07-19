@@ -2,79 +2,103 @@
 // src/components/BrainDump.tsx
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
-
 import TimePicker from "react-time-picker";
 import "react-time-picker/dist/TimePicker.css";
 import "react-clock/dist/Clock.css";
-
 import { RootState } from "../redux/store";
 import {
   addTask,
   deleteTask,
   setTaskInput,
   setTime,
+  addPriorityTask,
 } from "../redux/tasksSlice";
-import { title } from "process";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+
 const BrainDump: React.FC = () => {
-  const { tasks, taskInput, time } = useSelector(
+  const { tasks, taskInput, time, priorityTasks } = useSelector(
     (state: RootState) => state.tasks
   );
   const dispatch = useDispatch();
-  console.log(tasks, taskInput, title);
-  const notify = () => toast("Task Added");
+
+  const notify = (message: string) => toast(message);
+  const handleAddTask = () => {
+    if (tasks && time === null) {
+      notify("Please Add time and task name");
+    } else {
+      notify("Task Added to Brain Dump");
+    }
+  };
+  const handleAddPriorityTask = (taskTitle: string) => {
+    const task = tasks.find((task) => task.title === taskTitle);
+
+    if (task) {
+      if (priorityTasks.some((pt) => pt.title === task.title)) {
+        notify("Task is already in the priority list.");
+      } else if (priorityTasks.length >= 3) {
+        notify("Cannot add more than 3 tasks to priority.");
+      } else {
+        dispatch(addPriorityTask(task.title));
+        notify("Task Added to Priority Tasks");
+      }
+    } else {
+      notify("Task does not exist in the Brain Dump.");
+    }
+  };
+
   return (
     <>
-      <div className=" w-7/12 h-full border-x border-y py-12 px-12">
+      <div className="w-7/12 h-full border-x border-y py-12 px-12">
+        <ToastContainer
+          position="top-right"
+          autoClose={2000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="dark"
+        />
         <h2 className="text-center text-2xl">Brain Dump</h2>
-        <div className="flex flex-col justify-center items-center gap-4 ml-10  mt-10">
+        <div className="flex flex-col justify-center items-center gap-4 ml-10 mt-10">
           <input
-            className=" bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
             type="text"
             value={taskInput}
             onChange={(e) => dispatch(setTaskInput(e.target.value))}
             placeholder="Add a task"
           />
-          <div className=" flex flex-row gap-4">
-            <p className="text-lg ">Pick a time:</p>
+          <div className="flex flex-row gap-4">
+            <p className="text-lg">Pick a time:</p>
             <TimePicker
-              className=" w-36 "
+              className="w-36"
               onChange={(value) => {
-                const dateTime = value ? `2024-07-19T${value}:00` : null;
+                const dateTime = value
+                  ? `${new Date().toISOString().split("T")[0]}T${value}:00`
+                  : null;
                 dispatch(setTime(dateTime));
               }}
-              value={
-                time
-                  ? new Date(time).toTimeString().substring(0, 5)
-                  : new Date()
-              }
+              value={new Date()}
             />
           </div>
         </div>
         <div className="flex flex-row gap-2 justify-center items-center mt-10 mb-10">
           <button
-            className="text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 shadow-lg shadow-blue-500/50 dark:shadow-lg dark:shadow-blue-800/80 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"
+            className="text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 shadow-lg font-medium rounded-lg text-sm px-5 py-2.5"
             onClick={() => {
               dispatch(addTask());
-              notify();
+              handleAddTask();
             }}
           >
             Add To Tasks
           </button>
-          <ToastContainer
-            position="top-right"
-            autoClose={2000}
-            hideProgressBar={false}
-            newestOnTop={false}
-            closeOnClick
-            rtl={false}
-            pauseOnFocusLoss
-            draggable
-            pauseOnHover
-            theme="light"
-          />
-          <button className="text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 shadow-lg shadow-blue-500/50 dark:shadow-lg dark:shadow-blue-800/80 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">
+          <button
+            className="text-white bg-gradient-to-r from-green-500 via-green-600 to-green-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-green-300 shadow-lg font-medium rounded-lg text-sm px-5 py-2.5"
+            onClick={() => handleAddPriorityTask(taskInput)}
+          >
             Add To Priority Tasks
           </button>
         </div>
@@ -118,14 +142,17 @@ const BrainDump: React.FC = () => {
                   </td>
                   <td className="px-6 py-4">
                     <button
-                      onClick={() => dispatch(deleteTask(task.title))}
-                      className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
+                      onClick={() => handleAddPriorityTask(task.title)}
+                      className="font-medium text-green-600 dark:text-green-500 hover:underline"
                     >
                       Add to Priority
                     </button>
                     <br />
                     <button
-                      onClick={() => dispatch(deleteTask(task.title))}
+                      onClick={() => {
+                        dispatch(deleteTask(task.title));
+                        notify("Task Deleted");
+                      }}
                       className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
                     >
                       Delete Task

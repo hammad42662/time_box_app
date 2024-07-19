@@ -26,6 +26,7 @@ export default function CurrentTasks() {
         title: task.title,
         start: eventTime,
         id: index.toString(),
+        color: "orange",
       };
     });
 
@@ -42,6 +43,14 @@ export default function CurrentTasks() {
         editable={false}
         selectable={true}
         selectMirror={true}
+        headerToolbar={{
+          start: "title",
+          center: "",
+          end: "",
+        }}
+        stickyFooterScrollbar={false}
+        handleWindowResize={true}
+        themeSystem="bootstrap"
         events={events}
       />
     </div>
