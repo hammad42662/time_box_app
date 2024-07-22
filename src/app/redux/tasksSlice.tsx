@@ -1,24 +1,25 @@
-// src/redux/tasksSlice.ts
-
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface Task {
   title: string;
-  time: string | null;
+  startTime: string | null;
+  endTime: string | null;
 }
 
 interface TasksState {
   tasks: Task[];
   priorityTasks: Task[];
   taskInput: string;
-  time: string | null;
+  startTime: string | null;
+  endTime: string | null;
 }
 
 const initialState: TasksState = {
   tasks: [],
   priorityTasks: [],
   taskInput: "",
-  time: null,
+  startTime: null,
+  endTime: null,
 };
 
 const tasksSlice = createSlice({
@@ -28,16 +29,26 @@ const tasksSlice = createSlice({
     setTaskInput: (state, action: PayloadAction<string>) => {
       state.taskInput = action.payload;
     },
-    setTime: (state, action: PayloadAction<string | null>) => {
-      state.time = action.payload
+    setStartTime: (state, action: PayloadAction<string | null>) => {
+      state.startTime = action.payload
+        ? new Date(action.payload).toISOString()
+        : null;
+    },
+    setEndTime: (state, action: PayloadAction<string | null>) => {
+      state.endTime = action.payload
         ? new Date(action.payload).toISOString()
         : null;
     },
     addTask: (state) => {
-      if (state.taskInput.trim() !== "" && state.time) {
-        state.tasks.push({ title: state.taskInput, time: state.time });
+      if (state.taskInput.trim() !== "" && state.startTime && state.endTime) {
+        state.tasks.push({
+          title: state.taskInput,
+          startTime: state.startTime,
+          endTime: state.endTime,
+        });
         state.taskInput = "";
-        state.time = null;
+        state.startTime = null;
+        state.endTime = null;
       }
     },
     deleteTask: (state, action: PayloadAction<string>) => {
@@ -76,7 +87,8 @@ const tasksSlice = createSlice({
 
 export const {
   setTaskInput,
-  setTime,
+  setStartTime,
+  setEndTime,
   addTask,
   deleteTask,
   addPriorityTask,

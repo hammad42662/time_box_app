@@ -1,11 +1,10 @@
 "use client";
 import { Provider } from "react-redux";
-import BrainDump from "./components/braindump";
-import CurrentTasks from "./components/currenttasks";
-import PriorityTasks from "./components/prioritytasks";
 import store from "./redux/store";
 import { Montserrat } from "next/font/google";
-import Guide from "./components/guide";
+import BrainDump from "@/components/braindump/braindump";
+import PriorityTasks from "@/components/prioritytasks/prioritytasks";
+import CurrentTasks from "@/components/calendar/currenttasks";
 const montserrat = Montserrat({
   weight: ["400", "700", "900"],
   subsets: ["latin"],
