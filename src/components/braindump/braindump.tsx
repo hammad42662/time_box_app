@@ -1,5 +1,4 @@
 "use client";
-import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import TimePicker from "react-time-picker";
 import "react-time-picker/dist/TimePicker.css";
@@ -59,6 +58,20 @@ export default function BrainDump() {
       }
     } else {
       notify("Task does not exist in the Brain Dump.");
+    }
+  };
+
+  const handleDeleteTask = async (id: string) => {
+    try {
+      // Make a DELETE request to the server
+      await axios.delete(`/api/tasks/${id}`);
+
+      // Update local state
+      dispatch(deleteTask(id));
+      notify("Task Deleted");
+    } catch (error) {
+      console.error("Error deleting task:", error);
+      notify("Error deleting task");
     }
   };
 
@@ -197,7 +210,7 @@ export default function BrainDump() {
                     <br />
                     <button
                       onClick={() => {
-                        dispatch(deleteTask(task.title));
+                        handleDeleteTask("66a2b00d8458ee94e6eefec5");
                         notify("Task Deleted");
                       }}
                       className="font-medium text-blue-600 dark:text-blue-500 hover:underline"

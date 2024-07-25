@@ -7,6 +7,10 @@ export interface ITasks extends Document {
 }
 
 const taskSchema: Schema = new mongoose.Schema({
+  taskID: {
+    type: mongoose.Schema.Types.ObjectId,
+    required: false,
+  },
   name: {
     type: String,
     required: true,

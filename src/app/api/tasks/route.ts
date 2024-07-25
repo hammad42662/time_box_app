@@ -12,7 +12,7 @@ export async function GET() {
   }
 }
 
-export async function POST(request: any) {
+export async function POST(request: Request) {
   await dbConnect();
 
   try {

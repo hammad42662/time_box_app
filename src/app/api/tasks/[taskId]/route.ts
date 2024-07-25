@@ -1,30 +1,35 @@
-import { NextApiRequest, NextApiResponse } from "next";
-import mongoose from "mongoose";
-import Task from "@/models/Tasks";
-import dbConnect from "@/lib/dbconnect";
 import { NextResponse } from "next/server";
+import dbConnect from "@/lib/dbconnect";
+import Task from "@/models/Tasks";
 
-export async function DELETE(
-  request: Request,
-  { params }: { params: { id: string } }
-) {
-  await dbConnect();
-
-  const { id } = params;
-
-  if (!id || !mongoose.Types.ObjectId.isValid(id)) {
-    return NextResponse.json({ message: "Invalid ID format" }, { status: 400 });
-  }
-
+export async function DELETE(request: Request, context: any) {
   try {
-    const task = await Task.findByIdAndDelete(id);
+    await dbConnect();
 
-    if (!task) {
-      return NextResponse.json({ message: "Task not found" }, { status: 404 });
+    const { taskId } = context.params;
+
+    if (!taskId) {
+      return NextResponse.json(
+        { error: "No task ID provided" },
+        { status: 400 }
+      );
     }
 
-    return NextResponse.json({ message: "Task deleted successfully" });
-  } catch (err: any) {
-    return NextResponse.json({ error: err.message }, { status: 500 });
+    const deletedTask = await Task.findByIdAndDelete(taskId);
+
+    if (deletedTask) {
+      return NextResponse.json({
+        message: "Task deleted successfully",
+        task: deletedTask,
+      });
+    } else {
+      return NextResponse.json({ message: "Task not found" }, { status: 404 });
+    }
+  } catch (error) {
+    console.error("Error deleting task:", error);
+    return NextResponse.json(
+      { error: "Error deleting task", details: error },
+      { status: 500 }
+    );
   }
 }
