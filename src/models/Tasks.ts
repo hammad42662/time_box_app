@@ -1,17 +1,13 @@
 import mongoose, { Document, Schema } from "mongoose";
 
 export interface ITasks extends Document {
-  name: string;
+  title: string;
   startTime: string;
   endTime: string;
 }
 
 const taskSchema: Schema = new mongoose.Schema({
-  taskID: {
-    type: mongoose.Schema.Types.ObjectId,
-    required: false,
-  },
-  name: {
+  title: {
     type: String,
     required: true,
   },

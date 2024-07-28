@@ -32,26 +32,20 @@ export default function CurrentTasks() {
       const startTime = new Date(task.startTime!).toISOString();
       const endTime = new Date(task.endTime!).toISOString();
       const isPriority = priorityTasks.some(
-        (priorityTask) => priorityTask.title === task.title
+        (priorityTask) => priorityTask._id === task._id
       );
-      console.log(
-        `Task ${index}:`,
-        task.title,
-        startTime,
-        endTime,
-        isPriority ? "Green" : "Blue"
-      );
+
       return {
         title: task.title,
         start: startTime,
         end: endTime,
-        id: index.toString(),
+        id: task._id, // Using task._id for unique identification
         color: isPriority ? "green" : "blue",
       };
     });
 
   useEffect(() => {
-    console.log("Calendar events:", events); // Debugging log
+    console.log("Events for FullCalendar:", events);
   }, [events]);
 
   return (

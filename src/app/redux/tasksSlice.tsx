@@ -1,6 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface Task {
+  _id: string;
   title: string;
   startTime: string | null;
   endTime: string | null;
@@ -39,35 +40,27 @@ const tasksSlice = createSlice({
         ? new Date(action.payload).toISOString()
         : null;
     },
-    addTask: (state) => {
-      if (state.taskInput.trim() !== "" && state.startTime && state.endTime) {
-        state.tasks.push({
-          title: state.taskInput,
-          startTime: state.startTime,
-          endTime: state.endTime,
-        });
-        state.taskInput = "";
-        state.startTime = null;
-        state.endTime = null;
-      }
+    addTask: (state, action: PayloadAction<Task>) => {
+      state.tasks.push(action.payload);
+      state.taskInput = "";
+      state.startTime = null;
+      state.endTime = null;
     },
     deleteTask: (state, action: PayloadAction<string>) => {
-      state.tasks = state.tasks.filter((task) => task.title !== action.payload);
+      state.tasks = state.tasks.filter((task) => task._id !== action.payload);
       state.priorityTasks = state.priorityTasks.filter(
-        (task) => task.title !== action.payload
+        (task) => task._id !== action.payload
       );
     },
     addPriorityTask: (state, action: PayloadAction<string>) => {
-      const task = state.tasks.find((task) => task.title === action.payload);
+      const task = state.tasks.find((task) => task._id === action.payload);
 
-      // Check if the task is already in the priority list
       if (
         task &&
         !state.priorityTasks.some(
-          (priorityTask) => priorityTask.title === task.title
+          (priorityTask) => priorityTask._id === task._id
         )
       ) {
-        // Check if the priority tasks list is less than 3
         if (state.priorityTasks.length < 3) {
           state.priorityTasks.push(task);
         } else {
@@ -79,7 +72,7 @@ const tasksSlice = createSlice({
     },
     removePriorityTask: (state, action: PayloadAction<string>) => {
       state.priorityTasks = state.priorityTasks.filter(
-        (task) => task.title !== action.payload
+        (task) => task._id !== action.payload
       );
     },
   },

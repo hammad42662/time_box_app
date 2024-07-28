@@ -19,7 +19,7 @@ export async function POST(request: Request) {
     const { title, startTime, endTime } = await request.json();
 
     const newTask = new Task({
-      name: title,
+      title, // Changed from name to title
       startTime,
       endTime,
     });
@@ -27,14 +27,6 @@ export async function POST(request: Request) {
     await newTask.save();
 
     return NextResponse.json(newTask);
-  } catch (err: any) {
-    return NextResponse.json({ error: err.message }, { status: 500 });
-  }
-}
-export async function DELETE() {
-  await dbConnect();
-  try {
-    Task.deleteOne({});
   } catch (err: any) {
     return NextResponse.json({ error: err.message }, { status: 500 });
   }

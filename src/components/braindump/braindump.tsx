@@ -29,14 +29,17 @@ export default function BrainDump() {
       notify("Please Add start time, end time, and task name");
       return;
     }
-
     try {
+      console.log("Task Input:", taskInput);
       const response = await axios.post("/api/tasks", {
         title: taskInput,
         startTime,
         endTime,
       });
-      console.log(response);
+
+      const newTask = response.data; // Assuming the backend returns the created task with _id
+      console.log("New Task:", newTask); // Log the new task to ensure it has a title
+      dispatch(addTask(newTask));
       notify("Task Added to Brain Dump");
     } catch (error) {
       console.error(error);
@@ -44,16 +47,16 @@ export default function BrainDump() {
     }
   }
 
-  const handleAddPriorityTask = (taskTitle: string) => {
-    const task = tasks.find((task) => task.title === taskTitle);
+  const handleAddPriorityTask = (taskId: string) => {
+    const task = tasks.find((task) => task._id === taskId);
 
     if (task) {
-      if (priorityTasks.some((pt) => pt.title === task.title)) {
+      if (priorityTasks.some((pt) => pt._id === task._id)) {
         notify("Task is already in the priority list.");
       } else if (priorityTasks.length >= 3) {
         notify("Cannot add more than 3 tasks to priority.");
       } else {
-        dispatch(addPriorityTask(task.title));
+        dispatch(addPriorityTask(task._id));
         notify("Task Added to Priority Tasks");
       }
     } else {
@@ -142,7 +145,6 @@ export default function BrainDump() {
           <button
             className="text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 shadow-lg font-medium rounded-lg text-sm px-5 py-2.5"
             onClick={() => {
-              dispatch(addTask());
               handleAddTask();
             }}
           >
@@ -172,54 +174,54 @@ export default function BrainDump() {
               </tr>
             </thead>
             <tbody>
-              {tasks.map((task, index) => (
-                <tr
-                  key={index}
-                  className="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700"
-                >
-                  <th
-                    scope="row"
-                    className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+              {tasks.map((task, index) => {
+                console.log("Task:", task); // Add this line to debug
+                return (
+                  <tr
+                    key={task._id}
+                    className="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700"
                   >
-                    {index + 1}
-                  </th>
-                  <td className="px-6 py-4">{task.title}</td>
-                  <td className="px-6 py-4">
-                    {task.startTime
-                      ? new Date(task.startTime).toLocaleTimeString([], {
-                          hour: "2-digit",
-                          minute: "2-digit",
-                        })
-                      : "N/A"}
-                  </td>
-                  <td className="px-6 py-4">
-                    {task.endTime
-                      ? new Date(task.endTime).toLocaleTimeString([], {
-                          hour: "2-digit",
-                          minute: "2-digit",
-                        })
-                      : "N/A"}
-                  </td>
-                  <td className="px-6 py-4">
-                    <button
-                      onClick={() => handleAddPriorityTask(task.title)}
-                      className="font-medium text-green-600 dark:text-green-500 hover:underline"
+                    <th
+                      scope="row"
+                      className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
                     >
-                      Add to Priority
-                    </button>
-                    <br />
-                    <button
-                      onClick={() => {
-                        handleDeleteTask("66a2b00d8458ee94e6eefec5");
-                        notify("Task Deleted");
-                      }}
-                      className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
-                    >
-                      Delete Task
-                    </button>
-                  </td>
-                </tr>
-              ))}
+                      {index + 1}
+                    </th>
+                    <td className="px-6 py-4">{task.title}</td>
+                    <td className="px-6 py-4">
+                      {task.startTime
+                        ? new Date(task.startTime).toLocaleTimeString([], {
+                            hour: "2-digit",
+                            minute: "2-digit",
+                          })
+                        : "N/A"}
+                    </td>
+                    <td className="px-6 py-4">
+                      {task.endTime
+                        ? new Date(task.endTime).toLocaleTimeString([], {
+                            hour: "2-digit",
+                            minute: "2-digit",
+                          })
+                        : "N/A"}
+                    </td>
+                    <td className="px-6 py-4">
+                      <button
+                        onClick={() => handleAddPriorityTask(task._id)}
+                        className="font-medium text-green-600 dark:text-green-500 hover:underline"
+                      >
+                        Add to Priority
+                      </button>
+                      <br />
+                      <button
+                        onClick={() => handleDeleteTask(task._id)}
+                        className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
+                      >
+                        Delete Task
+                      </button>
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         </div>
