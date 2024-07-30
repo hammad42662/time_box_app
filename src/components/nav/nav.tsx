@@ -1,16 +1,34 @@
-import { GiTimeTrap } from "react-icons/gi";
+"use client";
+import axios from "axios";
+import { useRouter } from "next/navigation";
+import NavContent from "./navContent";
+interface NavProps {
+  onSignOut: () => void;
+}
 
-export default function Nav() {
+export default function Nav({ onSignOut }: NavProps) {
+  const router = useRouter();
+
+  const handleSignOut = async () => {
+    try {
+      await axios.post("/api/signout");
+      onSignOut(); // Notify parent component about sign-out
+      router.push("/"); // Redirect to login page
+    } catch (error) {
+      console.error("Sign out failed:", error);
+    }
+  };
+
   return (
-    <nav className=" w-full h-full bg-white mt-4">
-      <div className="flex justify-center items-center">
-        <span>
-          <GiTimeTrap size="5rem" color="" />
-        </span>
-        <span className=" text-3xl font-bold">Time Box</span>
-      </div>
-      <div className="flex justify-center items-center mt-4">
-        <h2 className=" text-2xl">Your Daily Schedule Planner</h2>
+    <nav className="w-full h-full bg-white mt-4 flex flex-row justify-evenly items-center">
+      <NavContent />
+      <div className=" self-end">
+        <button
+          onClick={handleSignOut}
+          className="ml-4 bg-blue-700 px-2 py rounded-lg text-lg text-white hover:bg-blue-200"
+        >
+          Sign Out
+        </button>
       </div>
     </nav>
   );
