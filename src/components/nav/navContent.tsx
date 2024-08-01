@@ -7,7 +7,7 @@ export default function NavContent() {
         <span>
           <GiTimeTrap size="5rem" color="" />
         </span>
-        <span className="text-3xl font-bold">Time Box</span>
+        <span className="text-3xl font-bold">Chrono Boxer</span>
       </div>
       <div className="flex justify-center items-center mt-4">
         <h2 className="text-2xl">Your Daily Schedule Planner</h2>

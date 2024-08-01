@@ -1,13 +1,20 @@
+import { NextRequest, NextResponse } from "next/server";
+import bcrypt from "bcrypt";
 import dbConnect from "@/lib/dbconnect";
 import User from "@/models/User";
-import { NextResponse } from "next/server";
-import bcrypt from "bcrypt";
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
   await dbConnect();
 
   try {
     const { username, email, password } = await request.json();
+
+    if (!username || !email || !password) {
+      return NextResponse.json(
+        { error: "Username, email, and password are required" },
+        { status: 400 }
+      );
+    }
 
     // Check if user already exists
     const existingUser = await User.findOne({ email });
@@ -30,12 +37,18 @@ export async function POST(request: Request) {
 
     await newUser.save();
 
+    // Exclude password from response
+    const { password: _, ...userWithoutPassword } = newUser.toObject();
+
     return NextResponse.json({
       message: "User created successfully",
-      user: newUser,
+      user: userWithoutPassword,
     });
   } catch (err: any) {
-    console.error(err); // Log the error for debugging
-    return NextResponse.json({ error: err.message }, { status: 500 });
+    console.error("Error during signup:", err); // Log the error for debugging
+    return NextResponse.json(
+      { error: "Internal server error", details: err.message },
+      { status: 500 }
+    );
   }
 }

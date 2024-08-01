@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect } from "react";
+import React, { useEffect, useMemo } from "react";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction";
@@ -12,46 +12,48 @@ export default function CurrentTasks() {
     (state: RootState) => state.tasks
   );
 
-  useEffect(() => {
-    console.log("Tasks from Redux store:", tasks);
-    console.log("Priority tasks from Redux store:", priorityTasks);
+  // Memoize events to avoid unnecessary re-renders
+  const events = useMemo(() => {
+    const isValidDate = (date: string | null) =>
+      date ? !isNaN(Date.parse(date)) : false;
+
+    return tasks
+      .filter(
+        (task) =>
+          task.startTime &&
+          task.endTime &&
+          isValidDate(task.startTime) &&
+          isValidDate(task.endTime)
+      )
+      .map((task) => {
+        const startTime = task.startTime
+          ? new Date(task.startTime).toISOString()
+          : "";
+        const endTime = task.endTime
+          ? new Date(task.endTime).toISOString()
+          : "";
+        const isPriority = priorityTasks.some(
+          (priorityTask) => priorityTask._id === task._id
+        );
+
+        return {
+          title: task.title,
+          start: startTime,
+          end: endTime,
+          id: task._id,
+          color: isPriority ? "green" : "blue",
+        };
+      });
   }, [tasks, priorityTasks]);
-
-  const isValidDate = (date: any) => {
-    return !isNaN(Date.parse(date));
-  };
-
-  const events = tasks
-    .filter(
-      (task) =>
-        task.startTime &&
-        task.endTime &&
-        isValidDate(task.startTime) &&
-        isValidDate(task.endTime)
-    )
-    .map((task, index) => {
-      const startTime = new Date(task.startTime!).toISOString();
-      const endTime = new Date(task.endTime!).toISOString();
-      const isPriority = priorityTasks.some(
-        (priorityTask) => priorityTask._id === task._id
-      );
-
-      return {
-        title: task.title,
-        start: startTime,
-        end: endTime,
-        id: task._id, // Using task._id for unique identification
-        color: isPriority ? "green" : "blue",
-      };
-    });
 
   useEffect(() => {
     console.log("Events for FullCalendar:", events);
   }, [events]);
 
   return (
-    <div className="calendar-container">
+    <div className="calendar-container -mt-36 mb-20">
       <FullCalendar
+        height={500}
         plugins={[dayGridPlugin, interactionPlugin, timeGridPlugin]}
         initialView="timeGridDay"
         nowIndicator={true}

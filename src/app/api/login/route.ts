@@ -1,21 +1,27 @@
+import { NextRequest, NextResponse } from "next/server";
+import bcrypt from "bcrypt";
+import { generateToken } from "@/lib/tokenUtils";
 import dbConnect from "@/lib/dbconnect";
 import User from "@/models/User";
-import { NextResponse } from "next/server";
-import bcrypt from "bcrypt";
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
   await dbConnect();
 
   try {
     const { email, password } = await request.json();
 
-    // Find user by email
+    if (!email || !password) {
+      return NextResponse.json(
+        { error: "Email and password are required" },
+        { status: 400 }
+      );
+    }
+
     const user = await User.findOne({ email });
     if (!user) {
       return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
 
-    // Check if password matches
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
       return NextResponse.json(
@@ -24,9 +30,15 @@ export async function POST(request: Request) {
       );
     }
 
-    // If authentication is successful
-    return NextResponse.json({ message: "Login successful", user });
+    // Generate JWT token
+    const token = generateToken(user._id.toString());
+
+    return NextResponse.json({ message: "Login successful", token });
   } catch (err: any) {
-    return NextResponse.json({ error: err.message }, { status: 500 });
+    console.error("Error during login:", err);
+    return NextResponse.json(
+      { error: "Internal server error", details: err.message },
+      { status: 500 }
+    );
   }
 }

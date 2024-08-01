@@ -52,8 +52,8 @@ const tasksSlice = createSlice({
         (task) => task._id !== action.payload
       );
     },
-    addPriorityTask: (state, action: PayloadAction<string>) => {
-      const task = state.tasks.find((task) => task._id === action.payload);
+    addPriorityTask: (state, action: PayloadAction<Task>) => {
+      const task = action.payload;
 
       if (
         task &&
@@ -70,6 +70,7 @@ const tasksSlice = createSlice({
         console.log("Task is already in the priority list.");
       }
     },
+
     removePriorityTask: (state, action: PayloadAction<string>) => {
       state.priorityTasks = state.priorityTasks.filter(
         (task) => task._id !== action.payload

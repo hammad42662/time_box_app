@@ -1,12 +1,13 @@
 "use client";
-import { loginFailure, loginSuccess } from "@/app/redux/authSlice";
+
 import axios from "axios";
 import { useState } from "react";
-import { useDispatch } from "react-redux";
 import NavContent from "../nav/navContent";
+
 interface LoginProps {
-  onLoginSuccess: () => void;
+  onLoginSuccess: (token: string) => void; // Modified to accept token
 }
+
 export default function Login({ onLoginSuccess }: LoginProps) {
   const [isLogin, setIsLogin] = useState(true); // Default to login view
   const [username, setUsername] = useState("");
@@ -26,7 +27,9 @@ export default function Login({ onLoginSuccess }: LoginProps) {
       setError(null);
 
       if (isLogin) {
-        onLoginSuccess(); // Notify parent component of successful login
+        // Pass the token to the parent component
+        const { token } = response.data; // Ensure your backend returns a token
+        onLoginSuccess(token);
       }
     } catch (err: any) {
       setError(err.response?.data?.error || "An error occurred");
@@ -34,11 +37,10 @@ export default function Login({ onLoginSuccess }: LoginProps) {
     }
   };
   return (
-    // <!-- component -->
     <>
       <NavContent />
       <div className="flex h-screen">
-        {/* <!-- Left Pane --> */}
+        {/* Left Pane */}
         <div className="hidden lg:flex items-center justify-center flex-1 bg-white text-black">
           <div className="max-w-md text-center">
             <svg
@@ -292,7 +294,8 @@ export default function Login({ onLoginSuccess }: LoginProps) {
             </svg>
           </div>
         </div>
-        {/* <!-- Right Pane --> */}
+
+        {/* Right Pane */}
         <div className="flex items-center justify-center flex-1 bg-gray-100 text-black">
           <div className="max-w-md w-full">
             <h1 className="text-2xl font-bold mb-6">

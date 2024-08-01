@@ -1,4 +1,5 @@
 "use client";
+
 import { useSelector, useDispatch } from "react-redux";
 import TimePicker from "react-time-picker";
 import "react-time-picker/dist/TimePicker.css";
@@ -15,14 +16,43 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { RootState } from "@/app/redux/store";
 import axios from "axios";
+import { useState, useEffect } from "react";
 
 export default function BrainDump() {
   const { tasks, taskInput, startTime, endTime, priorityTasks } = useSelector(
     (state: RootState) => state.tasks
   );
   const dispatch = useDispatch();
+  const [userTasks, setUserTasks] = useState<any[]>([]);
+  const [error, setError] = useState<string | null>(null);
 
   const notify = (message: string) => toast(message);
+
+  // Fetch user tasks on component mount
+  useEffect(() => {
+    const fetchTasks = async () => {
+      try {
+        const token = localStorage.getItem("authToken");
+        if (!token) {
+          throw new Error("No authentication token found");
+        }
+
+        const response = await axios.get("/api/tasks", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (response.status === 200) {
+          setUserTasks(response.data.tasks);
+        }
+      } catch (err: any) {
+        setError(err.message || "Failed to fetch tasks");
+      }
+    };
+
+    fetchTasks();
+  }, []);
 
   async function handleAddTask() {
     if (taskInput.trim() === "" || !startTime || !endTime) {
@@ -30,16 +60,28 @@ export default function BrainDump() {
       return;
     }
     try {
-      console.log("Task Input:", taskInput);
-      const response = await axios.post("/api/tasks", {
-        title: taskInput,
-        startTime,
-        endTime,
-      });
+      const token = localStorage.getItem("authToken");
+      if (!token) {
+        throw new Error("No authentication token found");
+      }
+
+      const response = await axios.post(
+        "/api/tasks",
+        {
+          title: taskInput,
+          startTime,
+          endTime,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
       const newTask = response.data; // Assuming the backend returns the created task with _id
-      console.log("New Task:", newTask); // Log the new task to ensure it has a title
       dispatch(addTask(newTask));
+      setUserTasks((prevTasks) => [...prevTasks, newTask]); // Update local state
       notify("Task Added to Brain Dump");
     } catch (error) {
       console.error(error);
@@ -47,8 +89,8 @@ export default function BrainDump() {
     }
   }
 
-  const handleAddPriorityTask = (taskId: string) => {
-    const task = tasks.find((task) => task._id === taskId);
+  const handleAddPriorityTask = async (taskId: string) => {
+    const task = userTasks.find((task) => task._id === taskId);
 
     if (task) {
       if (priorityTasks.some((pt) => pt._id === task._id)) {
@@ -56,8 +98,38 @@ export default function BrainDump() {
       } else if (priorityTasks.length >= 3) {
         notify("Cannot add more than 3 tasks to priority.");
       } else {
-        dispatch(addPriorityTask(task._id));
-        notify("Task Added to Priority Tasks");
+        try {
+          const token = localStorage.getItem("authToken");
+          if (!token) {
+            throw new Error("No authentication token found");
+          }
+
+          // Make API call to update task priority
+          const response = await axios.patch(
+            `/api/tasks/${taskId}/priority`,
+            {},
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+
+          if (response.status === 200) {
+            dispatch(addPriorityTask(task)); // Dispatch the entire task object
+            setUserTasks((prevTasks) =>
+              prevTasks.map((t) =>
+                t._id === task._id ? { ...t, priority: true } : t
+              )
+            );
+            notify("Task Added to Priority Tasks");
+          } else {
+            notify("Failed to add task to priority");
+          }
+        } catch (error) {
+          console.error("Error adding task to priority:", error);
+          notify("Error adding task to priority");
+        }
       }
     } else {
       notify("Task does not exist in the Brain Dump.");
@@ -66,17 +138,77 @@ export default function BrainDump() {
 
   const handleDeleteTask = async (id: string) => {
     try {
+      const token = localStorage.getItem("authToken");
+      if (!token) {
+        throw new Error("No authentication token found");
+      }
+
       // Make a DELETE request to the server
-      await axios.delete(`/api/tasks/${id}`);
+      await axios.delete(`/api/tasks/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
       // Update local state
       dispatch(deleteTask(id));
+      setUserTasks((prevTasks) => prevTasks.filter((task) => task._id !== id)); // Update local state
       notify("Task Deleted");
     } catch (error) {
       console.error("Error deleting task:", error);
       notify("Error deleting task");
     }
   };
+
+  // Local states for TimePicker values
+  const [localStartTime, setLocalStartTime] = useState(
+    startTime
+      ? new Date(startTime).toLocaleTimeString([], {
+          hour: "2-digit",
+          minute: "2-digit",
+          hour12: true,
+        })
+      : new Date().toLocaleTimeString([], {
+          hour: "2-digit",
+          minute: "2-digit",
+          hour12: true,
+        })
+  );
+
+  const [localEndTime, setLocalEndTime] = useState(
+    endTime
+      ? new Date(endTime).toLocaleTimeString([], {
+          hour: "2-digit",
+          minute: "2-digit",
+          hour12: true,
+        })
+      : new Date().toLocaleTimeString([], {
+          hour: "2-digit",
+          minute: "2-digit",
+          hour12: true,
+        })
+  );
+
+  const handleStartTimeChange = (value: any) => {
+    const dateTime = value
+      ? `${new Date().toISOString().split("T")[0]}T${value}:00`
+      : null;
+    setLocalStartTime(value);
+    dispatch(setStartTime(dateTime));
+  };
+
+  const handleEndTimeChange = (value: any) => {
+    const dateTime = value
+      ? `${new Date().toISOString().split("T")[0]}T${value}:00`
+      : null;
+    setLocalEndTime(value);
+    dispatch(setEndTime(dateTime));
+  };
+
+  // Filter out tasks that are in the priority list
+  const nonPriorityTasks = userTasks.filter(
+    (task) => !priorityTasks.some((pt) => pt._id === task._id)
+  );
 
   return (
     <>
@@ -101,52 +233,30 @@ export default function BrainDump() {
             value={taskInput}
             onChange={(e) => dispatch(setTaskInput(e.target.value))}
             placeholder="Add a task"
+            maxLength={20}
           />
           <div className="flex flex-row gap-4">
             <p className="text-lg">Start Time</p>
             <TimePicker
               className="w-36"
-              onChange={(value) => {
-                const dateTime = value
-                  ? `${new Date().toISOString().split("T")[0]}T${value}:00`
-                  : null;
-                dispatch(setStartTime(dateTime));
-              }}
-              value={
-                startTime
-                  ? new Date(startTime).toLocaleTimeString([], {
-                      hour: "2-digit",
-                      minute: "2-digit",
-                    })
-                  : new Date()
-              }
+              onChange={handleStartTimeChange}
+              value={localStartTime}
+              format="h:mm a"
             />
             <p className="text-lg">End Time</p>
             <TimePicker
               className="w-36"
-              onChange={(value) => {
-                const dateTime = value
-                  ? `${new Date().toISOString().split("T")[0]}T${value}:00`
-                  : null;
-                dispatch(setEndTime(dateTime));
-              }}
-              value={
-                endTime
-                  ? new Date(endTime).toLocaleTimeString([], {
-                      hour: "2-digit",
-                      minute: "2-digit",
-                    })
-                  : new Date()
-              }
+              disableClock={false}
+              onChange={handleEndTimeChange}
+              value={localEndTime}
+              format="h:mm a"
             />
           </div>
         </div>
         <div className="flex flex-row gap-2 justify-center items-center mt-10 mb-10">
           <button
             className="text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 shadow-lg font-medium rounded-lg text-sm px-5 py-2.5"
-            onClick={() => {
-              handleAddTask();
-            }}
+            onClick={handleAddTask}
           >
             Add To Tasks
           </button>
@@ -174,7 +284,7 @@ export default function BrainDump() {
               </tr>
             </thead>
             <tbody>
-              {tasks.map((task, index) => {
+              {nonPriorityTasks.map((task, index) => {
                 console.log("Task:", task); // Add this line to debug
                 return (
                   <tr
