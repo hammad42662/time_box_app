@@ -110,58 +110,6 @@ export async function PUT(
   }
 }
 
-// Handle PATCH requests to partially update a specific task by ID
-export async function PATCH(
-  request: NextRequest,
-  { params }: { params: { taskId: string } }
-) {
-  await dbConnect();
-
-  try {
-    // Extract and verify the token
-    const token = request.headers.get("Authorization")?.replace("Bearer ", "");
-    if (!token) {
-      return NextResponse.json({ error: "No token provided" }, { status: 401 });
-    }
-
-    const decoded = verifyToken(token) as { userId: string };
-
-    // Parse the request body for partial updates
-    const updates: Partial<{ priority: boolean }> = await request.json();
-
-    // Validate the taskId format
-    if (!isValidObjectId(params.taskId)) {
-      return NextResponse.json(
-        { error: "Invalid Task ID format" },
-        { status: 400 }
-      );
-    }
-
-    // Find and update the task
-    const task = await Task.findOne({
-      _id: params.taskId,
-      user: decoded.userId,
-    });
-    if (!task) {
-      return NextResponse.json({ error: "Task not found" }, { status: 404 });
-    }
-
-    // Apply partial updates
-    if (updates.priority !== undefined) {
-      task.priority = updates.priority;
-    }
-
-    await task.save();
-    return NextResponse.json(task);
-  } catch (error: any) {
-    console.error("Error partially updating task:", error);
-    return NextResponse.json(
-      { error: "Error partially updating task", details: error.message },
-      { status: 500 }
-    );
-  }
-}
-
 // Handle DELETE requests to remove a specific task by ID
 export async function DELETE(
   request: NextRequest,

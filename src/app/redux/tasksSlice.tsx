@@ -5,6 +5,8 @@ interface Task {
   title: string;
   startTime: string | null;
   endTime: string | null;
+  user: string;
+  priority: boolean;
 }
 
 interface TasksState {
@@ -56,7 +58,6 @@ const tasksSlice = createSlice({
       const task = action.payload;
 
       if (
-        task &&
         !state.priorityTasks.some(
           (priorityTask) => priorityTask._id === task._id
         )
@@ -70,11 +71,16 @@ const tasksSlice = createSlice({
         console.log("Task is already in the priority list.");
       }
     },
-
     removePriorityTask: (state, action: PayloadAction<string>) => {
       state.priorityTasks = state.priorityTasks.filter(
         (task) => task._id !== action.payload
       );
+    },
+    setTasks: (state, action: PayloadAction<Task[]>) => {
+      state.tasks = action.payload;
+    },
+    setPriorityTasks: (state, action: PayloadAction<Task[]>) => {
+      state.priorityTasks = action.payload;
     },
   },
 });
@@ -87,6 +93,8 @@ export const {
   deleteTask,
   addPriorityTask,
   removePriorityTask,
+  setTasks,
+  setPriorityTasks,
 } = tasksSlice.actions;
 
 export default tasksSlice.reducer;

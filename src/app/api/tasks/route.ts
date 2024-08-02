@@ -75,7 +75,6 @@ export async function GET(request: NextRequest) {
   await dbConnect();
 
   try {
-    // Extract and verify the token
     const token = request.headers.get("Authorization")?.replace("Bearer ", "");
     if (!token) {
       return NextResponse.json({ error: "No token provided" }, { status: 401 });
@@ -83,7 +82,6 @@ export async function GET(request: NextRequest) {
 
     const decoded = verifyToken(token) as { userId: string };
 
-    // Validate the userId format
     if (!isValidObjectId(decoded.userId)) {
       return NextResponse.json(
         { error: "Invalid user ID format" },
@@ -91,8 +89,7 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    // Fetch all tasks for the authenticated user
-    const tasks = await Task.find({ user: decoded.userId });
+    const tasks = await Task.find({ user: decoded.userId }); // Ensure tasks are user-specific
     return NextResponse.json({ tasks });
   } catch (error: any) {
     console.error("Error retrieving tasks:", error);

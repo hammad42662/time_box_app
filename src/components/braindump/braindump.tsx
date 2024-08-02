@@ -52,9 +52,9 @@ export default function BrainDump() {
     };
 
     fetchTasks();
-  }, []);
+  }, [dispatch]);
 
-  async function handleAddTask() {
+  const handleAddTask = async () => {
     if (taskInput.trim() === "" || !startTime || !endTime) {
       notify("Please Add start time, end time, and task name");
       return;
@@ -79,15 +79,15 @@ export default function BrainDump() {
         }
       );
 
-      const newTask = response.data; // Assuming the backend returns the created task with _id
+      const newTask = response.data;
       dispatch(addTask(newTask));
-      setUserTasks((prevTasks) => [...prevTasks, newTask]); // Update local state
+      setUserTasks((prevTasks) => [...prevTasks, newTask]); // Ensure new task is added correctly
       notify("Task Added to Brain Dump");
     } catch (error) {
       console.error(error);
       notify("Error adding task");
     }
-  }
+  };
 
   const handleAddPriorityTask = async (taskId: string) => {
     const task = userTasks.find((task) => task._id === taskId);
@@ -104,10 +104,9 @@ export default function BrainDump() {
             throw new Error("No authentication token found");
           }
 
-          // Make API call to update task priority
           const response = await axios.patch(
             `/api/tasks/${taskId}/priority`,
-            {},
+            { priority: true },
             {
               headers: {
                 Authorization: `Bearer ${token}`,
@@ -116,7 +115,7 @@ export default function BrainDump() {
           );
 
           if (response.status === 200) {
-            dispatch(addPriorityTask(task)); // Dispatch the entire task object
+            dispatch(addPriorityTask({ ...task, priority: true }));
             setUserTasks((prevTasks) =>
               prevTasks.map((t) =>
                 t._id === task._id ? { ...t, priority: true } : t
@@ -143,16 +142,14 @@ export default function BrainDump() {
         throw new Error("No authentication token found");
       }
 
-      // Make a DELETE request to the server
       await axios.delete(`/api/tasks/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
 
-      // Update local state
       dispatch(deleteTask(id));
-      setUserTasks((prevTasks) => prevTasks.filter((task) => task._id !== id)); // Update local state
+      setUserTasks((prevTasks) => prevTasks.filter((task) => task._id !== id));
       notify("Task Deleted");
     } catch (error) {
       console.error("Error deleting task:", error);

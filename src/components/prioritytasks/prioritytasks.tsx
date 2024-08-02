@@ -1,12 +1,37 @@
-// src/components/PriorityTasks.tsx
-import React from "react";
+import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "@/app/redux/store";
-import { removePriorityTask } from "@/app/redux/tasksSlice";
+import { removePriorityTask, setPriorityTasks } from "@/app/redux/tasksSlice";
+import axios from "axios";
 
 const PriorityTasks: React.FC = () => {
   const { priorityTasks } = useSelector((state: RootState) => state.tasks);
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    const fetchPriorityTasks = async () => {
+      try {
+        const token = localStorage.getItem("authToken");
+        if (!token) {
+          throw new Error("No authentication token found");
+        }
+
+        const response = await axios.get("/api/tasks/[taskId]/priority", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (response.status === 200) {
+          dispatch(setPriorityTasks(response.data.priorityTasks));
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    };
+
+    fetchPriorityTasks();
+  }, [dispatch]);
 
   return (
     <div className="w-full lg:w-7/12 h-full border-x border-y py-12 px-12">
@@ -42,10 +67,12 @@ const PriorityTasks: React.FC = () => {
               </th>
               <td className="px-6 py-4">{task.title}</td>
               <td className="px-6 py-4">
-                {new Date(task.startTime!).toLocaleTimeString([], {
-                  hour: "2-digit",
-                  minute: "2-digit",
-                })}
+                {task.startTime
+                  ? new Date(task.startTime).toLocaleTimeString([], {
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    })
+                  : "No start time"}
               </td>
               <td className="px-6 py-4">
                 <button
