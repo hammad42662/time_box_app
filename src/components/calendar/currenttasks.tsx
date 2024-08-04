@@ -1,4 +1,3 @@
-"use client";
 import React, { useEffect, useMemo } from "react";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
@@ -14,10 +13,13 @@ export default function CurrentTasks() {
 
   // Memoize events to avoid unnecessary re-renders
   const events = useMemo(() => {
-    const isValidDate = (date: string | null) =>
+    const isValidDate = (date: any) =>
       date ? !isNaN(Date.parse(date)) : false;
 
-    return tasks
+    // Merge tasks and priorityTasks
+    const allTasks = [...tasks, ...priorityTasks];
+
+    return allTasks
       .filter(
         (task) =>
           task.startTime &&

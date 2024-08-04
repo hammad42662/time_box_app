@@ -11,6 +11,8 @@ import {
   setStartTime,
   setEndTime,
   addPriorityTask,
+  setTasks,
+  setPriorityTasks,
 } from "@/app/redux/tasksSlice";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -44,7 +46,9 @@ export default function BrainDump() {
         });
 
         if (response.status === 200) {
-          setUserTasks(response.data.tasks);
+          const tasks = response.data.tasks;
+          setUserTasks(tasks);
+          dispatch(setTasks(tasks));
         }
       } catch (err: any) {
         setError(err.message || "Failed to fetch tasks");
@@ -81,7 +85,7 @@ export default function BrainDump() {
 
       const newTask = response.data;
       dispatch(addTask(newTask));
-      setUserTasks((prevTasks) => [...prevTasks, newTask]); // Ensure new task is added correctly
+      setUserTasks((prevTasks) => [...prevTasks, newTask]);
       notify("Task Added to Brain Dump");
     } catch (error) {
       console.error(error);
@@ -157,40 +161,10 @@ export default function BrainDump() {
     }
   };
 
-  // Local states for TimePicker values
-  const [localStartTime, setLocalStartTime] = useState(
-    startTime
-      ? new Date(startTime).toLocaleTimeString([], {
-          hour: "2-digit",
-          minute: "2-digit",
-          hour12: true,
-        })
-      : new Date().toLocaleTimeString([], {
-          hour: "2-digit",
-          minute: "2-digit",
-          hour12: true,
-        })
-  );
-
-  const [localEndTime, setLocalEndTime] = useState(
-    endTime
-      ? new Date(endTime).toLocaleTimeString([], {
-          hour: "2-digit",
-          minute: "2-digit",
-          hour12: true,
-        })
-      : new Date().toLocaleTimeString([], {
-          hour: "2-digit",
-          minute: "2-digit",
-          hour12: true,
-        })
-  );
-
   const handleStartTimeChange = (value: any) => {
     const dateTime = value
       ? `${new Date().toISOString().split("T")[0]}T${value}:00`
       : null;
-    setLocalStartTime(value);
     dispatch(setStartTime(dateTime));
   };
 
@@ -198,14 +172,8 @@ export default function BrainDump() {
     const dateTime = value
       ? `${new Date().toISOString().split("T")[0]}T${value}:00`
       : null;
-    setLocalEndTime(value);
     dispatch(setEndTime(dateTime));
   };
-
-  // Filter out tasks that are in the priority list
-  const nonPriorityTasks = userTasks.filter(
-    (task) => !priorityTasks.some((pt) => pt._id === task._id)
-  );
 
   return (
     <>
@@ -237,7 +205,15 @@ export default function BrainDump() {
             <TimePicker
               className="w-36"
               onChange={handleStartTimeChange}
-              value={localStartTime}
+              value={
+                startTime
+                  ? new Date(startTime).toLocaleTimeString([], {
+                      hour: "2-digit",
+                      minute: "2-digit",
+                      hour12: true,
+                    })
+                  : null
+              }
               format="h:mm a"
             />
             <p className="text-lg">End Time</p>
@@ -245,7 +221,15 @@ export default function BrainDump() {
               className="w-36"
               disableClock={false}
               onChange={handleEndTimeChange}
-              value={localEndTime}
+              value={
+                endTime
+                  ? new Date(endTime).toLocaleTimeString([], {
+                      hour: "2-digit",
+                      minute: "2-digit",
+                      hour12: true,
+                    })
+                  : null
+              }
               format="h:mm a"
             />
           </div>
@@ -281,54 +265,51 @@ export default function BrainDump() {
               </tr>
             </thead>
             <tbody>
-              {nonPriorityTasks.map((task, index) => {
-                console.log("Task:", task); // Add this line to debug
-                return (
-                  <tr
-                    key={task._id}
-                    className="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700"
+              {tasks.map((task, index) => (
+                <tr
+                  key={task._id}
+                  className="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700"
+                >
+                  <th
+                    scope="row"
+                    className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
                   >
-                    <th
-                      scope="row"
-                      className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                    {index + 1}
+                  </th>
+                  <td className="px-6 py-4">{task.title}</td>
+                  <td className="px-6 py-4">
+                    {task.startTime
+                      ? new Date(task.startTime).toLocaleTimeString([], {
+                          hour: "2-digit",
+                          minute: "2-digit",
+                        })
+                      : "N/A"}
+                  </td>
+                  <td className="px-6 py-4">
+                    {task.endTime
+                      ? new Date(task.endTime).toLocaleTimeString([], {
+                          hour: "2-digit",
+                          minute: "2-digit",
+                        })
+                      : "N/A"}
+                  </td>
+                  <td className="px-6 py-4">
+                    <button
+                      onClick={() => handleAddPriorityTask(task._id)}
+                      className="font-medium text-green-600 dark:text-green-500 hover:underline"
                     >
-                      {index + 1}
-                    </th>
-                    <td className="px-6 py-4">{task.title}</td>
-                    <td className="px-6 py-4">
-                      {task.startTime
-                        ? new Date(task.startTime).toLocaleTimeString([], {
-                            hour: "2-digit",
-                            minute: "2-digit",
-                          })
-                        : "N/A"}
-                    </td>
-                    <td className="px-6 py-4">
-                      {task.endTime
-                        ? new Date(task.endTime).toLocaleTimeString([], {
-                            hour: "2-digit",
-                            minute: "2-digit",
-                          })
-                        : "N/A"}
-                    </td>
-                    <td className="px-6 py-4">
-                      <button
-                        onClick={() => handleAddPriorityTask(task._id)}
-                        className="font-medium text-green-600 dark:text-green-500 hover:underline"
-                      >
-                        Add to Priority
-                      </button>
-                      <br />
-                      <button
-                        onClick={() => handleDeleteTask(task._id)}
-                        className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
-                      >
-                        Delete Task
-                      </button>
-                    </td>
-                  </tr>
-                );
-              })}
+                      Add to Priority
+                    </button>
+                    <br />
+                    <button
+                      onClick={() => handleDeleteTask(task._id)}
+                      className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
+                    >
+                      Delete Task
+                    </button>
+                  </td>
+                </tr>
+              ))}
             </tbody>
           </table>
         </div>
