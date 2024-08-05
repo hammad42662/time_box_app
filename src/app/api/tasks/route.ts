@@ -4,17 +4,14 @@ import Task from "@/models/Tasks";
 import { verifyToken } from "@/lib/tokenUtils";
 import mongoose from "mongoose";
 
-// Helper function to validate ObjectId format
 function isValidObjectId(id: string): boolean {
   return mongoose.Types.ObjectId.isValid(id);
 }
 
-// Handle POST requests to create a new task
 export async function POST(request: NextRequest) {
   await dbConnect();
 
   try {
-    // Extract and verify the token
     const token = request.headers.get("Authorization")?.replace("Bearer ", "");
     if (!token) {
       return NextResponse.json({ error: "No token provided" }, { status: 401 });
@@ -22,7 +19,6 @@ export async function POST(request: NextRequest) {
 
     const decoded = verifyToken(token) as { userId: string };
 
-    // Validate the userId format
     if (!isValidObjectId(decoded.userId)) {
       return NextResponse.json(
         { error: "Invalid user ID format" },
@@ -30,7 +26,6 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Parse the request body for task details
     const { title, startTime, endTime } = await request.json();
     if (!title || !startTime || !endTime) {
       return NextResponse.json(
@@ -39,7 +34,6 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Validate date format
     if (
       isNaN(new Date(startTime).getTime()) ||
       isNaN(new Date(endTime).getTime())
@@ -50,7 +44,6 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Create and save the new task
     const newTask = new Task({
       title,
       startTime: new Date(startTime),
@@ -62,7 +55,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json(newTask);
   } catch (err: any) {
-    console.error("Error creating task:", err); // Log the error for debugging
+    console.error("Error creating task:", err);
     return NextResponse.json(
       { error: "Internal server error", details: err.message },
       { status: 500 }
@@ -70,7 +63,6 @@ export async function POST(request: NextRequest) {
   }
 }
 
-// Handle GET requests to retrieve all tasks for the authenticated user
 export async function GET(request: NextRequest) {
   await dbConnect();
 

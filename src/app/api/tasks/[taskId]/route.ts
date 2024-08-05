@@ -4,12 +4,10 @@ import Task from "@/models/Tasks";
 import { verifyToken } from "@/lib/tokenUtils";
 import mongoose from "mongoose";
 
-// Helper function to validate ObjectId format
 function isValidObjectId(id: string): boolean {
   return mongoose.Types.ObjectId.isValid(id);
 }
 
-// Handle GET requests to retrieve a specific task by ID
 export async function GET(
   request: NextRequest,
   { params }: { params: { taskId: string } }
@@ -17,7 +15,6 @@ export async function GET(
   await dbConnect();
 
   try {
-    // Extract and verify the token
     const token = request.headers.get("Authorization")?.replace("Bearer ", "");
     if (!token) {
       return NextResponse.json({ error: "No token provided" }, { status: 401 });
@@ -25,7 +22,6 @@ export async function GET(
 
     const decoded = verifyToken(token) as { userId: string };
 
-    // Validate the taskId format
     if (!isValidObjectId(params.taskId)) {
       return NextResponse.json(
         { error: "Invalid Task ID format" },
@@ -33,7 +29,6 @@ export async function GET(
       );
     }
 
-    // Find the task by ID
     const task = await Task.findOne({
       _id: params.taskId,
       user: decoded.userId,
@@ -52,7 +47,6 @@ export async function GET(
   }
 }
 
-// Handle PUT requests to update a specific task by ID
 export async function PUT(
   request: NextRequest,
   { params }: { params: { taskId: string } }
@@ -60,7 +54,6 @@ export async function PUT(
   await dbConnect();
 
   try {
-    // Extract and verify the token
     const token = request.headers.get("Authorization")?.replace("Bearer ", "");
     if (!token) {
       return NextResponse.json({ error: "No token provided" }, { status: 401 });
@@ -68,7 +61,6 @@ export async function PUT(
 
     const decoded = verifyToken(token) as { userId: string };
 
-    // Parse the request body for task updates
     const { title, startTime, endTime } = await request.json();
     if (!title && !startTime && !endTime) {
       return NextResponse.json(
@@ -85,7 +77,6 @@ export async function PUT(
       );
     }
 
-    // Find and update the task
     const task = await Task.findOne({
       _id: params.taskId,
       user: decoded.userId,
@@ -94,7 +85,6 @@ export async function PUT(
       return NextResponse.json({ error: "Task not found" }, { status: 404 });
     }
 
-    // Update task fields
     if (title) task.title = title;
     if (startTime) task.startTime = new Date(startTime);
     if (endTime) task.endTime = new Date(endTime);
@@ -110,7 +100,6 @@ export async function PUT(
   }
 }
 
-// Handle DELETE requests to remove a specific task by ID
 export async function DELETE(
   request: NextRequest,
   { params }: { params: { taskId: string } }
@@ -118,7 +107,6 @@ export async function DELETE(
   await dbConnect();
 
   try {
-    // Extract and verify the token
     const token = request.headers.get("Authorization")?.replace("Bearer ", "");
     if (!token) {
       return NextResponse.json({ error: "No token provided" }, { status: 401 });
@@ -126,7 +114,6 @@ export async function DELETE(
 
     const decoded = verifyToken(token) as { userId: string };
 
-    // Validate the taskId format
     if (!isValidObjectId(params.taskId)) {
       return NextResponse.json(
         { error: "Invalid Task ID format" },
@@ -134,7 +121,6 @@ export async function DELETE(
       );
     }
 
-    // Find and delete the task
     const result = await Task.deleteOne({
       _id: params.taskId,
       user: decoded.userId,

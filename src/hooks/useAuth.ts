@@ -16,7 +16,7 @@ const useAuth = () => {
           setIsLoggedIn(false);
         }
       } catch (error) {
-        console.error("Authentication check failed:", error); // Log detailed error
+        console.error("Authentication check failed:", error);
         setIsLoggedIn(false);
       } finally {
         setIsLoading(false);

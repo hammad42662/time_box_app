@@ -2,10 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(request: NextRequest) {
   try {
-    // Create response for successful sign-out
     const response = NextResponse.json({ message: "Sign-out successful" });
 
-    // Clear authentication-related cookies or headers
     response.cookies.delete("authToken");
 
     return response;

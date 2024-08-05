@@ -30,7 +30,6 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Generate JWT token
     const token = generateToken(user._id.toString());
 
     return NextResponse.json({ message: "Login successful", token });

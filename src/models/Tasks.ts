@@ -5,7 +5,7 @@ export interface ITasks extends Document {
   startTime: Date;
   endTime: Date;
   user: mongoose.Types.ObjectId;
-  priority: boolean; // Add this field if it doesn't exist
+  priority: boolean;
 }
 
 const taskSchema: Schema = new mongoose.Schema({
@@ -32,7 +32,6 @@ const taskSchema: Schema = new mongoose.Schema({
   },
 });
 
-// Use a check to prevent overwriting the model
 const Task = mongoose.models.Task || mongoose.model<ITasks>("Task", taskSchema);
 
 export default Task;

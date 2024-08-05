@@ -21,5 +21,5 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/protected/**", "/tasks/**"], // Add routes you want to protect
+  matcher: ["/protected/**", "/tasks/**"],
 };

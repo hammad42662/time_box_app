@@ -11,12 +11,10 @@ export default function CurrentTasks() {
     (state: RootState) => state.tasks
   );
 
-  // Memoize events to avoid unnecessary re-renders
   const events = useMemo(() => {
     const isValidDate = (date: any) =>
       date ? !isNaN(Date.parse(date)) : false;
 
-    // Merge tasks and priorityTasks
     const allTasks = [...tasks, ...priorityTasks];
 
     return allTasks

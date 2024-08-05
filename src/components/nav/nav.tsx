@@ -12,8 +12,8 @@ export default function Nav({ onSignOut }: NavProps) {
   const handleSignOut = async () => {
     try {
       await axios.post("/api/signout");
-      onSignOut(); // Notify parent component about sign-out
-      router.push("/"); // Redirect to login page
+      onSignOut();
+      router.push("/");
     } catch (error) {
       console.error("Sign out failed:", error);
     }

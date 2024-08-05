@@ -5,11 +5,11 @@ import { useState } from "react";
 import NavContent from "../nav/navContent";
 
 interface LoginProps {
-  onLoginSuccess: (token: string) => void; // Modified to accept token
+  onLoginSuccess: (token: string) => void;
 }
 
 export default function Login({ onLoginSuccess }: LoginProps) {
-  const [isLogin, setIsLogin] = useState(true); // Default to login view
+  const [isLogin, setIsLogin] = useState(true);
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -27,8 +27,7 @@ export default function Login({ onLoginSuccess }: LoginProps) {
       setError(null);
 
       if (isLogin) {
-        // Pass the token to the parent component
-        const { token } = response.data; // Ensure your backend returns a token
+        const { token } = response.data;
         onLoginSuccess(token);
       }
     } catch (err: any) {

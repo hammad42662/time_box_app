@@ -23,7 +23,6 @@ const userSchema: Schema = new mongoose.Schema({
   },
 });
 
-// Use a check to prevent overwriting the model
 const User = mongoose.models.User || mongoose.model<IUser>("User", userSchema);
 
 export default User;

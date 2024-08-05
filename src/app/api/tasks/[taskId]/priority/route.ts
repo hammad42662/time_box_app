@@ -4,7 +4,6 @@ import Task from "@/models/Tasks";
 import { isValidObjectId } from "mongoose";
 import { NextRequest, NextResponse } from "next/server";
 
-// Fetch priority tasks for logged-in user
 export async function GET(request: NextRequest) {
   await dbConnect();
 
@@ -31,7 +30,6 @@ export async function GET(request: NextRequest) {
   }
 }
 
-// Update task priority
 export async function PATCH(
   request: NextRequest,
   { params }: { params: { taskId: string } }

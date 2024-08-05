@@ -3,7 +3,6 @@ import { verifyToken } from "@/lib/tokenUtils";
 
 export async function GET(request: NextRequest) {
   try {
-    // Extract token from Authorization header
     const authHeader = request.headers.get("Authorization");
     if (!authHeader) {
       return NextResponse.json({ error: "No token provided" }, { status: 401 });
@@ -12,7 +11,7 @@ export async function GET(request: NextRequest) {
     const token = authHeader.replace("Bearer ", "");
     const decoded = verifyToken(token) as { userId: string };
 
-    console.log("Token is valid:", decoded); // Debugging log
+    console.log("Token is valid:", decoded);
 
     return NextResponse.json({ message: "Token is valid" });
   } catch (err: any) {

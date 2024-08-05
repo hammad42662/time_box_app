@@ -16,7 +16,6 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Check if user already exists
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       return NextResponse.json(
@@ -25,10 +24,8 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Hash the password
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Create a new user
     const newUser = new User({
       username,
       email,
@@ -37,7 +34,6 @@ export async function POST(request: NextRequest) {
 
     await newUser.save();
 
-    // Exclude password from response
     const { password: _, ...userWithoutPassword } = newUser.toObject();
 
     return NextResponse.json({
@@ -45,7 +41,7 @@ export async function POST(request: NextRequest) {
       user: userWithoutPassword,
     });
   } catch (err: any) {
-    console.error("Error during signup:", err); // Log the error for debugging
+    console.error("Error during signup:", err);
     return NextResponse.json(
       { error: "Internal server error", details: err.message },
       { status: 500 }

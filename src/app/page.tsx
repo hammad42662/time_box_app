@@ -11,8 +11,7 @@ import axios from "axios";
 
 export default function Home() {
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
-  const [loading, setLoading] = useState<boolean>(true); // Add loading state
-
+  const [loading, setLoading] = useState<boolean>(true);
   useEffect(() => {
     const checkAuth = async () => {
       try {
@@ -34,27 +33,24 @@ export default function Home() {
         console.error("Authentication check failed:", error);
         setIsLoggedIn(false);
       } finally {
-        setLoading(false); // Set loading to false after check completes
+        setLoading(false);
       }
     };
 
     checkAuth();
   }, []);
 
-  // Handle successful login
   const handleLoginSuccess = (token: string) => {
     localStorage.setItem("authToken", token);
     setIsLoggedIn(true);
   };
 
-  // Handle logout
   const handleSignOut = () => {
     localStorage.removeItem("authToken");
     setIsLoggedIn(false);
   };
 
   if (loading) {
-    // Show a loading spinner or message while checking authentication
     return <div>Loading...</div>;
   }
 

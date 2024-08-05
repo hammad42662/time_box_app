@@ -30,7 +30,6 @@ export default function BrainDump() {
 
   const notify = (message: string) => toast(message);
 
-  // Fetch user tasks on component mount
   useEffect(() => {
     const fetchTasks = async () => {
       try {
