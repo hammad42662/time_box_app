@@ -8,7 +8,6 @@ import Nav from "@/components/nav/nav";
 import { Provider } from "react-redux";
 import store from "./redux/store";
 import axios from "axios";
-import nookies from "nookies";
 
 export default function Home() {
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);

@@ -6,7 +6,7 @@ const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Time Box App",
-  description: "This is time box app",
+  description: "Daily Schedule Planner",
 };
 
 export default function RootLayout({

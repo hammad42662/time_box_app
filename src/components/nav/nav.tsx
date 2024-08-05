@@ -20,9 +20,9 @@ export default function Nav({ onSignOut }: NavProps) {
   };
 
   return (
-    <nav className="w-full h-full bg-white mt-4 flex flex-row justify-evenly items-center">
+    <nav className="w-full h-full bg-white mt-4 flex flex-row justify-center items-center">
       <NavContent />
-      <div className=" self-end">
+      <div className="self-end">
         <button
           onClick={handleSignOut}
           className="ml-4 bg-blue-700 px-2 py rounded-lg text-lg text-white hover:bg-blue-200"
