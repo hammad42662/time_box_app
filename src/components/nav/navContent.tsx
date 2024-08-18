@@ -2,7 +2,7 @@ import { GiTimeTrap } from "react-icons/gi";
 
 export default function NavContent() {
   return (
-    <div className="flex-row justify-center items-center">
+    <div className="flex-row justify-center items-center mt-4 mb-4">
       <div className=" flex flex-row justify-center items-center gap-2">
         <span className=" border-x-2 border-y-2 px-2 py-2 ">
           <GiTimeTrap size="3rem" color="black" />
