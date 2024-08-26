@@ -192,12 +192,12 @@ export default function BrainDump() {
           pauseOnHover
           theme="dark"
         />
-        <h2 className="mb-10 text-xl text-center font-bold py-2 text-blue-500">
+        <h2 className="mb-10 text-xl text-center font-bold py-2 text-green-500">
           Brain Dump
         </h2>
-        <div className="flex flex-col justify-center items-center gap-4 ml-10 mt-10">
+        <div className="flex flex-col justify-center items-center gap-4 w-full mt-10">
           <input
-            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+            className="bg-gray-50 border-4 border-green-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full lg:w-6/12 p-2.5"
             type="text"
             value={taskInput}
             onChange={(e) => dispatch(setTaskInput(e.target.value))}
@@ -206,8 +206,7 @@ export default function BrainDump() {
           />
           <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
             <div className=" flex flex-row justify-center items-center gap-2">
-              <p className="text-sm w-36 font-bold">Start Time</p>{" "}
-              <span>:</span>
+              <p className="text-sm w-36 font-bold text-zinc-700">Start Time</p>
               <TimePicker
                 className="w-full bg-blue-50 text-zinc-600"
                 onChange={handleStartTimeChange}
@@ -224,7 +223,7 @@ export default function BrainDump() {
               />
             </div>
             <div className=" flex flex-row justify-center items-center gap-2">
-              <p className="text-sm w-36 font-bold">End Time</p> <span>:</span>
+              <p className="text-sm w-36 font-bold text-zinc-700">End Time</p>
               <TimePicker
                 className="w-full bg-blue-50 text-zinc-600 "
                 disableClock={false}

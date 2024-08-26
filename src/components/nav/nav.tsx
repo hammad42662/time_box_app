@@ -41,9 +41,9 @@ export default function Nav({ onSignOut }: NavProps) {
         {/* Display the username */}
         <button
           onClick={handleSignOut}
-          className="bg-blue-500 self-end  md:w-36 px-1 py-2 rounded-xl text-base text-white hover:bg-blue-900"
+          className="bg-blue-500 self-end  md:w-36 px-1 py-1 rounded-lg text-base text-white hover:bg-blue-900"
         >
-          Sign Out
+          Log Out
         </button>
       </div>
     </nav>
