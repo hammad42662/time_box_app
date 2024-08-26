@@ -3,6 +3,9 @@
 import { useSelector, useDispatch } from "react-redux";
 import TimePicker from "react-time-picker";
 import "react-time-picker/dist/TimePicker.css";
+import { IoAddCircle } from "react-icons/io5";
+import { MdDelete } from "react-icons/md";
+
 import "react-clock/dist/Clock.css";
 import {
   addTask,
@@ -176,7 +179,7 @@ export default function BrainDump() {
 
   return (
     <>
-      <div className="w-7/12 h-full border-x border-y py-12 px-12">
+      <div className=" w-full md:w-full h-full border-x border-y shadow-xl shadow-blue-100 ">
         <ToastContainer
           position="top-right"
           autoClose={2000}
@@ -189,7 +192,9 @@ export default function BrainDump() {
           pauseOnHover
           theme="dark"
         />
-        <h2 className="text-center text-2xl font-bold">Brain Dump</h2>
+        <h2 className="mb-10 text-xl text-center font-bold py-2 text-blue-500">
+          Brain Dump
+        </h2>
         <div className="flex flex-col justify-center items-center gap-4 ml-10 mt-10">
           <input
             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
@@ -199,52 +204,57 @@ export default function BrainDump() {
             placeholder="Add a task"
             maxLength={20}
           />
-          <div className="flex flex-row gap-4">
-            <p className="text-lg">Start Time</p>
-            <TimePicker
-              className="w-36"
-              onChange={handleStartTimeChange}
-              value={
-                startTime
-                  ? new Date(startTime).toLocaleTimeString([], {
-                      hour: "2-digit",
-                      minute: "2-digit",
-                      hour12: true,
-                    })
-                  : null
-              }
-              format="h:mm a"
-            />
-            <p className="text-lg">End Time</p>
-            <TimePicker
-              className="w-36"
-              disableClock={false}
-              onChange={handleEndTimeChange}
-              value={
-                endTime
-                  ? new Date(endTime).toLocaleTimeString([], {
-                      hour: "2-digit",
-                      minute: "2-digit",
-                      hour12: true,
-                    })
-                  : null
-              }
-              format="h:mm a"
-            />
+          <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
+            <div className=" flex flex-row justify-center items-center gap-2">
+              <p className="text-sm w-36 font-bold">Start Time</p>{" "}
+              <span>:</span>
+              <TimePicker
+                className="w-full bg-blue-50 text-zinc-600"
+                onChange={handleStartTimeChange}
+                value={
+                  startTime
+                    ? new Date(startTime).toLocaleTimeString([], {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                        hour12: true,
+                      })
+                    : null
+                }
+                format="h:mm a"
+              />
+            </div>
+            <div className=" flex flex-row justify-center items-center gap-2">
+              <p className="text-sm w-36 font-bold">End Time</p> <span>:</span>
+              <TimePicker
+                className="w-full bg-blue-50 text-zinc-600 "
+                disableClock={false}
+                onChange={handleEndTimeChange}
+                value={
+                  endTime
+                    ? new Date(endTime).toLocaleTimeString([], {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                        hour12: true,
+                      })
+                    : null
+                }
+                format="h:mm a"
+              />
+            </div>
           </div>
         </div>
         <div className="flex flex-row gap-2 justify-center items-center mt-10 mb-10">
           <button
-            className="text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 shadow-lg font-medium rounded-lg text-sm px-5 py-2.5"
+            className="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-normal text-sm rounded-lg  px-4 py-2 me-2 mb-2"
             onClick={handleAddTask}
           >
             Add To Tasks
           </button>
         </div>
         <hr />
-        <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
-          <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-            <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+        <div className=" w-full relative  shadow-md sm:rounded-lg">
+          <table className=" table-fixed border-spacing-y-20  w-full  text-sm text-left rtl:text-right text-gray-500 ">
+            <thead className="text-xs text-gray-700 uppercase bg-gray-50 ">
               <tr>
                 <th scope="col" className="px-6 py-3">
                   Task Number
@@ -267,11 +277,11 @@ export default function BrainDump() {
               {tasks.map((task, index) => (
                 <tr
                   key={task._id}
-                  className="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700"
+                  className="odd:bg-white  even:bg-gray-50 border-b "
                 >
                   <th
                     scope="row"
-                    className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                    className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap "
                   >
                     {index + 1}
                   </th>
@@ -295,16 +305,17 @@ export default function BrainDump() {
                   <td className="px-6 py-4">
                     <button
                       onClick={() => handleAddPriorityTask(task._id)}
-                      className="font-medium text-green-600 dark:text-green-500 hover:underline"
+                      className="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-normal text-sm rounded-lg  px-4 py-2 me-2 mb-2"
                     >
-                      Add to Priority
+                      <IoAddCircle />
                     </button>
+
                     <br />
                     <button
                       onClick={() => handleDeleteTask(task._id)}
-                      className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
+                      className="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-normal  text-sm rounded-lg  px-4 py-2 me-2 mb-2 "
                     >
-                      Delete Task
+                      <MdDelete />
                     </button>
                   </td>
                 </tr>

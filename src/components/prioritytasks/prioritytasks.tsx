@@ -4,6 +4,7 @@ import { RootState } from "@/app/redux/store";
 import { removePriorityTask, setPriorityTasks } from "@/app/redux/tasksSlice";
 import axios from "axios";
 import { useEffect } from "react";
+import { MdDelete } from "react-icons/md";
 
 const PriorityTasks: React.FC = () => {
   const { priorityTasks } = useSelector((state: RootState) => state.tasks);
@@ -35,10 +36,12 @@ const PriorityTasks: React.FC = () => {
   }, [dispatch]);
 
   return (
-    <div className="w-full lg:w-7/12 h-full border-x border-y py-12 px-12">
-      <h1 className="mb-10 text-2xl text-center font-bold">Priority Tasks</h1>
-      <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-        <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+    <div className="w-full lg:w-7/12 h-full border-x border-y shadow-xl shadow-blue-100 py-12 px-12 bg-transparent">
+      <h1 className="mb-10 text-xl text-center font-bold text-green-500">
+        Priority Tasks
+      </h1>
+      <table className="  table-fixed border-spacing-y-20  w-full text-sm text-left rtl:text-right text-gray-500 ">
+        <thead className="text-xs text-gray-700 uppercase bg-gray-50 ">
           <tr>
             <th scope="col" className="px-6 py-3">
               Task Number
@@ -56,13 +59,10 @@ const PriorityTasks: React.FC = () => {
         </thead>
         <tbody>
           {priorityTasks.map((task, index) => (
-            <tr
-              key={task._id}
-              className="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
-            >
+            <tr key={task._id} className="bg-white border-b ">
               <th
                 scope="row"
-                className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap "
               >
                 {index + 1}
               </th>
@@ -78,9 +78,9 @@ const PriorityTasks: React.FC = () => {
               <td className="px-6 py-4">
                 <button
                   onClick={() => dispatch(removePriorityTask(task._id))}
-                  className="font-medium text-red-600 dark:text-red-500 hover:underline"
+                  className="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-normal  text-sm rounded-lg  px-4 py-2 me-2 mb-2 "
                 >
-                  Remove from Priority
+                  <MdDelete />
                 </button>
               </td>
             </tr>

@@ -42,7 +42,7 @@ export default function CurrentTasks() {
           start: startTime,
           end: endTime,
           id: task._id,
-          color: isPriority ? "green" : "blue",
+          color: isPriority ? "#22C55E" : "#3B82F6",
         };
       });
   }, [tasks, priorityTasks]);
@@ -52,9 +52,9 @@ export default function CurrentTasks() {
   }, [events]);
 
   return (
-    <div className="calendar-container -mt-36 mb-20">
+    <div className=" w-full calendar-container -mt-36 mb-20">
       <FullCalendar
-        height={500}
+        height={1000}
         plugins={[dayGridPlugin, interactionPlugin, timeGridPlugin]}
         initialView="timeGridDay"
         nowIndicator={true}

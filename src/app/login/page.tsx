@@ -45,6 +45,7 @@ export default function Login() {
 
   const handleLoginSuccess = (token: string) => {
     localStorage.setItem("authToken", token);
+    localStorage.setItem("username", username);
     setIsLoggedIn(true);
   };
 
