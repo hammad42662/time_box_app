@@ -8,18 +8,25 @@ export async function POST(request: NextRequest) {
   await dbConnect();
 
   try {
-    const { email, password } = await request.json();
+    const { email, username, password } = await request.json();
 
-    if (!email || !password) {
+    if ((!email && !username) || !password) {
       return NextResponse.json(
-        { error: "Email and password are required" },
+        { error: "Username or email and password are required" },
         { status: 400 }
       );
     }
 
-    const user = await User.findOne({ email });
+    // Search for user by email or username
+    const user = await User.findOne({
+      $or: [{ email }, { username }],
+    });
+
     if (!user) {
-      return NextResponse.json({ error: "User not found" }, { status: 404 });
+      return NextResponse.json(
+        { error: "User not found, try logging in with email." },
+        { status: 404 }
+      );
     }
 
     const isMatch = await bcrypt.compare(password, user.password);

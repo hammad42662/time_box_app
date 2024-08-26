@@ -1,8 +1,9 @@
-import React, { useEffect } from "react";
+"use client";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "@/app/redux/store";
 import { removePriorityTask, setPriorityTasks } from "@/app/redux/tasksSlice";
 import axios from "axios";
+import { useEffect } from "react";
 
 const PriorityTasks: React.FC = () => {
   const { priorityTasks } = useSelector((state: RootState) => state.tasks);

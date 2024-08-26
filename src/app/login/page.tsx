@@ -62,7 +62,11 @@ export default function Login() {
 
     try {
       const url = isLogin ? "/api/login" : "/api/signup";
-      const response = await axios.post(url, { username, email, password });
+      const loginData = isLogin
+        ? { email: email || username, password }
+        : { username, email, password };
+
+      const response = await axios.post(url, loginData);
 
       setSuccess(response.data.message);
       setError(null);
@@ -76,6 +80,7 @@ export default function Login() {
       setSuccess(null);
     }
   };
+
   return (
     <>
       {isLoggedIn ? (
@@ -105,16 +110,16 @@ export default function Login() {
                     <div className="mb-4">
                       <label
                         className="block text-sm font-medium mb-1"
-                        htmlFor="username"
+                        htmlFor="email"
                       >
-                        Username
+                        Email
                       </label>
                       <input
-                        type="text"
-                        id="username"
+                        type="email"
+                        id="email"
                         className="form-input w-full"
-                        value={username}
-                        onChange={(e) => setUsername(e.target.value)}
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
                         required
                       />
                     </div>
@@ -122,16 +127,16 @@ export default function Login() {
                   <div className="mb-4">
                     <label
                       className="block text-sm font-medium mb-1"
-                      htmlFor="email"
+                      htmlFor="username"
                     >
-                      Email
+                      {isLogin ? "Username or Email" : " Username"}
                     </label>
                     <input
-                      type="email"
-                      id="email"
+                      type="text"
+                      id="username"
                       className="form-input w-full"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
+                      value={username}
+                      onChange={(e) => setUsername(e.target.value)}
                       required
                     />
                   </div>
@@ -162,7 +167,7 @@ export default function Login() {
                 <div className="mt-4 text-sm">
                   {isLogin ? (
                     <p>
-                      Don&apos;t have an account?{" "}
+                      Don&apos;t have an account?
                       <span
                         onClick={() => setIsLogin(false)}
                         className="text-blue-500 cursor-pointer"
@@ -172,7 +177,7 @@ export default function Login() {
                     </p>
                   ) : (
                     <p>
-                      Already have an account?{" "}
+                      Already have an account?
                       <span
                         onClick={() => setIsLogin(true)}
                         className="text-blue-500 cursor-pointer"
