@@ -9,6 +9,7 @@ const navElements = [
   { name: "About Us" },
   { name: "Careers" },
   { name: "Community" },
+  { name: "Login/SignUp" },
 ];
 export default function Navbar() {
   const [toggleMenu, setToggleMenu] = useState(false);
@@ -43,7 +44,7 @@ function MobileMenu({ toggleMenu }: any) {
       >
         {navElements.map((item, index) => (
           <li key={index}>
-            <a href="">{item.name}</a>
+            <a href="/login">{item.name}</a>
           </li>
         ))}
       </ul>
@@ -85,7 +86,7 @@ function MenuItems() {
         href="/login"
         className="hidden p-3 px-6 pt-2 text-white bg-blue-500 rounded-full baseline hover:bg-brightRedLight md:block"
       >
-        Get Started
+        Login/ Signup
       </Link>
     </>
   );

@@ -101,9 +101,9 @@ export default function Login() {
             </div>
 
             {/* Right Pane */}
-            <div className="flex items-center justify-center flex-1  text-black">
+            <div className="flex items-center justify-center flex-1 ml-2 mr-2  text-black">
               <div className="max-w-md w-full">
-                <h1 className="text-2xl font-bold mb-6">
+                <h1 className="text-2xl font-bold mb-6 text-center">
                   {isLogin ? "Login" : "Sign Up"}
                 </h1>
                 <form onSubmit={handleSubmit}>
@@ -161,7 +161,10 @@ export default function Login() {
                   {success && (
                     <div className="text-green-500 mb-4">{success}</div>
                   )}
-                  <button type="submit" className="btn btn-primary w-full">
+                  <button
+                    type="submit"
+                    className=" bg-blue-400 w-20  text-white px-2 py-2 rounded-md hover:bg-blue-700"
+                  >
                     {isLogin ? "Login" : "Sign Up"}
                   </button>
                 </form>
@@ -171,7 +174,7 @@ export default function Login() {
                       Don&apos;t have an account?
                       <span
                         onClick={() => setIsLogin(false)}
-                        className="text-blue-500 cursor-pointer"
+                        className="text-blue-500 ml-2 cursor-pointer"
                       >
                         Sign up here
                       </span>
@@ -181,7 +184,7 @@ export default function Login() {
                       Already have an account?
                       <span
                         onClick={() => setIsLogin(true)}
-                        className="text-blue-500 cursor-pointer"
+                        className="text-blue-500 ml-2 cursor-pointer"
                       >
                         Login here
                       </span>
