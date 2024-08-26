@@ -1,5 +1,6 @@
 import Image from "next/image";
 import illustrationIntro from "../../../public/hero_illus.svg";
+import Link from "next/link";
 
 const Hero = () => {
   return (
@@ -16,17 +17,17 @@ const Hero = () => {
             Boost productivity, stay focused, and make every minute count.
           </p>
           <div className="flex justify-center md:justify-start">
-            <a
-              href="#"
+            <Link
+              href="/login"
               className="p-3 px-6 pt-2 text-white bg-blue-600 rounded-full baseline hover:bg-brightRedLight"
             >
               Get Started with Task Box
-            </a>
+            </Link>
           </div>
         </div>
         {/* Image */}
         <div className="md:w-1/2">
-          <Image className=" rounded-3xl" src={illustrationIntro} alt="" />
+          <Image className=" rounded-full" src={illustrationIntro} alt="" />
         </div>
       </div>
     </section>

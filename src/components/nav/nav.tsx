@@ -15,20 +15,21 @@ export default function Nav({ onSignOut }: NavProps) {
     try {
       await axios.post("/api/signout");
       onSignOut();
-      router.push("/");
+      router.push("/login");
     } catch (error) {
       console.error("Sign out failed:", error);
     }
   };
 
   return (
-    <nav className="w-full h-full mt-10 mb-10 px-2 py-2 flex flex-row justify-center items-center">
-      <div className=" w-full">
-        <Image src={logo} className=" w-36 h-full" alt="" />
-      </div>
+    <nav className="w-full h-full mt-10 mb-10 px-2 py-2 flex flex-row justify-evenly">
+      <Image src={logo} className=" w-36 h-full" alt="" />
+
+      <h1 className="text-3xl font-semibold">Welcome User</h1>
+
       <button
         onClick={handleSignOut}
-        className=" justify-self-end bg-blue-500 w-36 px-2 py-2 rounded-lg text-lg text-white hover:bg-blue-200"
+        className="  bg-blue-500 w-36 px-1 py-2 rounded-3xl text-base text-white hover:bg-blue-900"
       >
         Sign Out
       </button>
