@@ -8,6 +8,7 @@ import Nav from "@/components/nav/nav";
 import { Provider } from "react-redux";
 import store from "./redux/store";
 import axios from "axios";
+import LandingPage from "@/components/landing page/landing";
 
 export default function Home() {
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
@@ -57,7 +58,8 @@ export default function Home() {
   return (
     <Provider store={store}>
       {isLoggedIn ? (
-        <div>
+        <div className="">
+          <LandingPage />
           <Nav onSignOut={handleSignOut} />
           <main className="w-full flex lg:flex-col flex-col gap-64 ml-3 mr-3 mt-10">
             <aside className="w-full h-full flex flex-col lg:flex-row gap-10">

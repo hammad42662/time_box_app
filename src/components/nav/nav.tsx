@@ -1,7 +1,9 @@
 "use client";
 import axios from "axios";
 import { useRouter } from "next/navigation";
-import NavContent from "./navContent";
+import logo from "../../../public/task-box-logo.png";
+import Image from "next/image";
+
 interface NavProps {
   onSignOut: () => void;
 }
@@ -20,16 +22,16 @@ export default function Nav({ onSignOut }: NavProps) {
   };
 
   return (
-    <nav className="w-full h-full bg-white mt-4 flex flex-row justify-center items-center">
-      <NavContent />
-      <div className="self-end">
-        <button
-          onClick={handleSignOut}
-          className="ml-4 bg-blue-700 px-2 py rounded-lg text-lg text-white hover:bg-blue-200"
-        >
-          Sign Out
-        </button>
+    <nav className="w-full h-full mt-10 mb-10 px-2 py-2 flex flex-row justify-center items-center">
+      <div className=" w-full">
+        <Image src={logo} className=" w-36 h-full" alt="" />
       </div>
+      <button
+        onClick={handleSignOut}
+        className=" justify-self-end bg-blue-500 w-36 px-2 py-2 rounded-lg text-lg text-white hover:bg-blue-200"
+      >
+        Sign Out
+      </button>
     </nav>
   );
 }
