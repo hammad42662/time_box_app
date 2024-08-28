@@ -4,12 +4,11 @@ import logo from "../../../public/task-box-logo.png";
 import Image from "next/image";
 import Link from "next/link";
 const navElements = [
-  { name: "Pricing" },
-  { name: "Product" },
-  { name: "About Us" },
-  { name: "Careers" },
-  { name: "Community" },
-  { name: "Login/SignUp" },
+  { name: "Pricing", link: "" },
+  { name: "Product", link: "" },
+  { name: "About Us", link: "" },
+  { name: "Careers", link: "" },
+  { name: "Community", link: "" },
 ];
 export default function Navbar() {
   const [toggleMenu, setToggleMenu] = useState(false);
@@ -44,9 +43,18 @@ function MobileMenu({ toggleMenu }: any) {
       >
         {navElements.map((item, index) => (
           <li key={index}>
-            <a href="/login">{item.name}</a>
+            <Link href={item.link}>{item.name}</Link>
           </li>
         ))}
+        <li>
+          {" "}
+          <Link
+            href="/login"
+            className=" p-3 px-6 pt-2 text-white bg-blue-500 rounded-full baseline hover:bg-blue-900 block "
+          >
+            Login/ Signup
+          </Link>
+        </li>
       </ul>
     </div>
   );
@@ -84,7 +92,7 @@ function MenuItems() {
       </ul>
       <Link
         href="/login"
-        className="hidden p-3 px-6 pt-2 text-white bg-blue-500 rounded-full baseline hover:bg-brightRedLight md:block"
+        className=" p-3 px-6 pt-2 text-white bg-blue-500 rounded-full baseline hover:bg-blue-900 hidden md:block "
       >
         Login/ Signup
       </Link>

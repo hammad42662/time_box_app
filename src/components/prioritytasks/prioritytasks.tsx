@@ -36,8 +36,8 @@ const PriorityTasks: React.FC = () => {
   }, [dispatch]);
 
   return (
-    <div className="w-full lg:w-7/12 h-full border-x border-y shadow-xl shadow-blue-100 py-12 px-12 bg-transparent">
-      <h1 className="mb-10 text-xl text-center font-bold text-green-500">
+    <div className="w-full lg:w-7/12 h-full border-x border-y rounded-3xl shadow-xl shadow-blue-100 py-12 px-12 bg-transparent">
+      <h1 className="mb-10 text-xl text-center font-bold text-zinc-600 opacity-50">
         Priority Tasks
       </h1>
       <table className="  table-fixed border-spacing-y-20  w-full text-sm text-left rtl:text-right text-gray-500 ">
@@ -69,11 +69,18 @@ const PriorityTasks: React.FC = () => {
               <td className="px-6 py-4">{task.title}</td>
               <td className="px-6 py-4">
                 {task.startTime
-                  ? new Date(task.startTime).toLocaleTimeString([], {
+                  ? new Date(task.startTime).toLocaleTimeString("en-US", {
                       hour: "2-digit",
                       minute: "2-digit",
                     })
                   : "No start time"}
+                -
+                {task.endTime
+                  ? new Date(task.endTime).toLocaleTimeString("en-US", {
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    })
+                  : "No End time"}
               </td>
               <td className="px-6 py-4">
                 <button

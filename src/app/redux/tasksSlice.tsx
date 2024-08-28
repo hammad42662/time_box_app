@@ -33,15 +33,13 @@ const tasksSlice = createSlice({
       state.taskInput = action.payload;
     },
     setStartTime: (state, action: PayloadAction<string | null>) => {
-      state.startTime = action.payload
-        ? new Date(action.payload).toISOString()
-        : null;
+      // Directly store the ISO string or null
+      state.startTime = action.payload;
     },
     setEndTime: (state, action: PayloadAction<string | null>) => {
-      state.endTime = action.payload
-        ? new Date(action.payload).toISOString()
-        : null;
+      state.endTime = action.payload;
     },
+
     addTask: (state, action: PayloadAction<Task>) => {
       state.tasks.push(action.payload);
       state.taskInput = "";
