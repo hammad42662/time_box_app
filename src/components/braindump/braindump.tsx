@@ -197,7 +197,7 @@ export default function BrainDump() {
         </h2>
         <div className="flex flex-col justify-center items-center gap-4 w-full mt-10">
           <input
-            className="bg-gray-50 border-4 border-green-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full lg:w-6/12 p-2.5"
+            className="bg-gray-50 border-2 border-blue-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full lg:w-6/12 p-2.5"
             type="text"
             value={taskInput}
             onChange={(e) => dispatch(setTaskInput(e.target.value))}
