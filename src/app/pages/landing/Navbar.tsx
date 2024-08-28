@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import logo from "../../../public/task-box-logo.png";
+import logo from "../../../../public/task-box-logo.png";
 import Image from "next/image";
 import Link from "next/link";
 const navElements = [

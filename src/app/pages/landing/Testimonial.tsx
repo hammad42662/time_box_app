@@ -1,6 +1,6 @@
-import avatarAnisha from "../../../public/avatar-anisha.png";
-import avatarAli from "../../../public/avatar-ali.png";
-import avatarRichard from "../../../public/avatar-richard.png";
+import zaraAv from "../../../..//public/avatar-shanai.png";
+import avAlia from "../../../..//public/avatar-ali.png";
+import avRichard from "../../../..//public/avatar-richard.png";
 import Image from "next/image";
 
 const Testimonial = () => {
@@ -16,7 +16,7 @@ const Testimonial = () => {
         <div className="flex flex-col mt-24 md:flex-row md:space-x-6">
           {/* Testimonial 1 */}
           <div className="flex flex-col items-center p-6 space-y-6 rounded-lg bg-veryLightGray md:w-1/3">
-            <Image src={avatarAnisha} className="w-16 -mt-14" alt="" />
+            <Image src={zaraAv} className="w-16 -mt-14" alt="" />
             <h5 className="text-lg font-bold">Zara Richard</h5>
             <p className="text-sm text-darkGrayishBlue">
               “Task Box has transformed how I manage my day. Focusing on just
@@ -27,7 +27,7 @@ const Testimonial = () => {
 
           {/* Testimonial 2 */}
           <div className="hidden flex-col items-center p-6 space-y-6 rounded-lg bg-veryLightGray md:flex md:w-1/3">
-            <Image src={avatarAli} className="w-16 -mt-14" alt="" />
+            <Image src={avAlia} className="w-16 -mt-14" alt="" />
             <h5 className="text-lg font-bold">Alia Matthew</h5>
             <p className="text-sm text-darkGrayishBlue">
               “With Task Box, my productivity has skyrocketed. The simple act of
@@ -38,7 +38,7 @@ const Testimonial = () => {
 
           {/* Testimonial 3 */}
           <div className="hidden flex-col items-center p-6 space-y-6 rounded-lg bg-veryLightGray md:flex md:w-1/3">
-            <Image src={avatarRichard} className="w-16 -mt-14" alt="" />
+            <Image src={avRichard} className="w-16 -mt-14" alt="" />
             <h5 className="text-lg font-bold">Ricky Norman</h5>
             <p className="text-sm text-darkGrayishBlue">
               “Task Box makes my workday so much smoother. The calendar view,

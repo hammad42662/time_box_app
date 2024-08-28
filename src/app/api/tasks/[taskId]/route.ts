@@ -69,7 +69,6 @@ export async function PUT(
       );
     }
 
-    // Validate the taskId format
     if (!isValidObjectId(params.taskId)) {
       return NextResponse.json(
         { error: "Invalid Task ID format" },

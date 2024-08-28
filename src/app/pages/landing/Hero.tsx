@@ -1,5 +1,5 @@
 import Image from "next/image";
-import illustrationIntro from "../../../public/hero_illus.svg";
+import heroIllistration from "../../../../public/hero_illus.svg";
 import Link from "next/link";
 
 const Hero = () => {
@@ -27,7 +27,7 @@ const Hero = () => {
         </div>
         {/* Image */}
         <div className="md:w-1/2">
-          <Image className=" rounded-full" src={illustrationIntro} alt="" />
+          <Image className=" rounded-full" src={heroIllistration} alt="" />
         </div>
       </div>
     </section>

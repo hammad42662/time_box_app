@@ -1,4 +1,4 @@
-import companyLogoWhite from "../../../public/task-box-logo.png";
+import applogo from "../../../../public/task-box-logo.png";
 import facebookLogo from "../../../public/icon-facebook.svg";
 import youtubeLogo from "../../../public/icon-youtube.svg";
 import twitterLogo from "../../../public/icon-twitter.svg";
@@ -18,7 +18,7 @@ const Footer = () => {
           </div>
           {/* Logo */}
           <div>
-            <Image src={companyLogoWhite} className=" w-36 h-auto" alt="" />
+            <Image src={applogo} className=" w-36 h-auto" alt="" />
           </div>
           {/* Social as Container */}
           {/* <div className="flex justify-center space-x-4">

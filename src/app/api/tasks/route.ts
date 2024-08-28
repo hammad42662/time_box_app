@@ -81,7 +81,7 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    const tasks = await Task.find({ user: decoded.userId }); // Ensure tasks are user-specific
+    const tasks = await Task.find({ user: decoded.userId });
     return NextResponse.json({ tasks });
   } catch (error: any) {
     console.error("Error retrieving tasks:", error);
