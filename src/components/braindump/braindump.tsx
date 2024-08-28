@@ -163,12 +163,11 @@ export default function BrainDump() {
     }
   };
 
-  const handleStartTimeChange = (value: string | null) => {
-    // value should already be in the format you need, e.g., "10:00 AM"
-    const formattedTime = value
-      ? new Date(`1970-01-01T${value}`).toISOString()
+  const handleStartTimeChange = (value: any) => {
+    const dateTime = value
+      ? `${new Date().toISOString().split("T")[0]}T${value}:00`
       : null;
-    dispatch(setStartTime(formattedTime));
+    dispatch(setStartTime(dateTime));
   };
 
   const handleEndTimeChange = (value: any) => {
@@ -180,7 +179,7 @@ export default function BrainDump() {
 
   return (
     <>
-      <div className=" w-full md:w-full lg:w-11/12 h-full rounded-3xl  border-x border-y shadow-xl shadow-blue-100 ">
+      <div className="  w-full md:w-full lg:w-11/12 h-full rounded-3xl  border-x border-y shadow-xl shadow-blue-100  ">
         <ToastContainer
           position="top-right"
           autoClose={2000}
@@ -198,7 +197,7 @@ export default function BrainDump() {
         </h2>
         <div className="flex flex-col justify-center items-center gap-4 w-full mt-10">
           <input
-            className="bg-gray-50 border-2 border-zinc-200 text-gray-700 text-sm rounded-lg focus:ring-zinc-500 focus:border-zinc-500 block w-full lg:w-6/12 p-2.5"
+            className="bg-gray-50 border-4 border-green-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full lg:w-6/12 p-2.5"
             type="text"
             value={taskInput}
             onChange={(e) => dispatch(setTaskInput(e.target.value))}
@@ -209,11 +208,11 @@ export default function BrainDump() {
             <div className=" flex flex-row justify-center items-center gap-2">
               <p className="text-sm w-36 font-bold text-zinc-700">Start Time</p>
               <TimePicker
-                className="w-full bg-blue-50 text-zinc-600 border-x border-y border-blue-300 "
+                className="w-full bg-blue-50 text-zinc-600"
                 onChange={handleStartTimeChange}
                 value={
                   startTime
-                    ? new Date(startTime).toLocaleTimeString("en-US", {
+                    ? new Date(startTime).toLocaleTimeString([], {
                         hour: "2-digit",
                         minute: "2-digit",
                         hour12: true,
@@ -226,15 +225,15 @@ export default function BrainDump() {
             <div className=" flex flex-row justify-center items-center gap-2">
               <p className="text-sm w-36 font-bold text-zinc-700">End Time</p>
               <TimePicker
-                className="w-full bg-blue-50 text-zinc-600 border-x border-y border-blue-300 "
+                className="w-full bg-blue-50 text-zinc-600 "
                 disableClock={false}
                 onChange={handleEndTimeChange}
                 value={
                   endTime
-                    ? new Date(endTime).toLocaleTimeString("en-US", {
+                    ? new Date(endTime).toLocaleTimeString([], {
                         hour: "2-digit",
                         minute: "2-digit",
-                        hour12: false,
+                        hour12: true,
                       })
                     : null
                 }
@@ -288,19 +287,19 @@ export default function BrainDump() {
                   <td className="px-6 py-4">{task.title}</td>
                   <td className="px-6 py-4">
                     {task.startTime
-                      ? new Date(task.startTime).toLocaleTimeString("en-US", {
+                      ? new Date(task.startTime).toLocaleTimeString([], {
                           hour: "2-digit",
                           minute: "2-digit",
                         })
-                      : "No start time"}
+                      : "N/A"}
                   </td>
                   <td className="px-6 py-4">
                     {task.endTime
-                      ? new Date(task.endTime).toLocaleTimeString("en-US", {
+                      ? new Date(task.endTime).toLocaleTimeString([], {
                           hour: "2-digit",
                           minute: "2-digit",
                         })
-                      : "No End time"}
+                      : "N/A"}
                   </td>
                   <td className="px-6 py-4">
                     <button
